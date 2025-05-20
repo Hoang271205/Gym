@@ -1,0 +1,16 @@
+# Build output (ALWAYS ignore these)
+.gradle/
+build/
+*/build/
+
+# Local SDK path (unique per developer)
+local.properties
+
+# IDE config (machine-specific)
+.idea/
+*.iml
+
+# Binary output
+*.apk
+*.ap_
+*.aab
