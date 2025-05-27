@@ -14,25 +14,25 @@
 
         <!-- Background image section with button overlay -->
         <FrameLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-
-        <ImageView
             android:layout_width="match_parent"
-            android:layout_height="213dp"
-            android:scaleType="centerCrop"
-            android:src="@drawable/registerbackground" />
+            android:layout_height="wrap_content">
 
-        <!-- Back button styled like a circular overlay -->
-        <ImageButton
-            android:layout_width="48dp"
-            android:layout_height="48dp"
-            android:layout_margin="16dp"
-            android:src="@drawable/back"
-            android:scaleType="center"
-            android:background="@drawable/round_corner"
-            android:layout_gravity="top|start" />
-    </FrameLayout>
+            <ImageView
+                android:layout_width="match_parent"
+                android:layout_height="213dp"
+                android:scaleType="centerCrop"
+                android:src="@drawable/registerbackground" />
+
+            <!-- Back button styled like a circular overlay -->
+            <ImageButton
+                android:layout_width="48dp"
+                android:layout_height="48dp"
+                android:layout_margin="16dp"
+                android:src="@drawable/back"
+                android:scaleType="center"
+                android:background="@drawable/round_corner"
+                android:layout_gravity="top|start" />
+        </FrameLayout>
 
         <TextView
             android:layout_width="wrap_content"
