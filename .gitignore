@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 *.iml
 .gradle
 /local.properties
@@ -13,3 +14,21 @@
 .externalNativeBuild
 .cxx
 local.properties
+=======
+# Build output (ALWAYS ignore these)
+.gradle/
+build/
+*/build/
+
+# Local SDK path (unique per developer)
+local.properties
+
+# IDE config (machine-specific)
+.idea/
+*.iml
+
+# Binary output
+*.apk
+*.ap_
+*.aab
+>>>>>>> 87e2298ec7b86b2e32d7e41cb81119833a7378bc
