@@ -1,0 +1,196 @@
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#0D0C1D">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        >
+
+        <!-- Background image section with button overlay -->
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <!-- Back button styled like a circular overlay -->
+
+            <ImageView
+                android:layout_width="match_parent"
+                android:layout_height="250dp"
+                android:scaleType="centerCrop"
+                android:adjustViewBounds="true"
+
+                android:src="@drawable/register_backkground" />
+
+            <ImageButton
+                android:layout_marginStart="20dp"
+                android:layout_width="58dp"
+                android:layout_height="55dp"
+                android:backgroundTint="@color/black"
+                android:text="<"
+                android:textSize="20dp" />
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@drawable/register_shading" />
+
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="bottom"
+                android:layout_marginTop="16dp"
+                android:layout_marginStart="20dp"
+                android:text="Register"
+                android:textColor="@android:color/white"
+                android:textSize="35sp"
+                android:textStyle="bold" />
+        </FrameLayout>
+
+        <!-- Create Account -->
+        <ImageView
+
+            android:layout_width="370dp"
+            android:layout_height="77dp"
+            android:layout_marginStart="20dp"
+            android:paddingStart="-5dp"
+            android:paddingTop="10dp"
+            android:scaleType="centerCrop"
+            android:src="@drawable/register_step2" />
+
+
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Set Your Goal"
+            android:layout_marginStart="10dp"
+            android:layout_marginTop="10dp"
+            android:textStyle="bold"
+            android:textSize="25sp"
+            android:textColor="@android:color/white" />
+
+        <!-- Goal Buttons -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:layout_margin="20dp"
+            android:gravity="center_horizontal">
+
+            <Button
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Lose Weight"
+
+                android:textColor="@android:color/white"
+                android:layout_marginTop="10dp"
+                android:backgroundTint="#FF6600"
+          />
+
+            <Button
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Build Muscle"
+                android:backgroundTint="#FF6600"
+                android:textColor="@android:color/white"
+                android:layout_marginTop="10dp"/>
+
+            <Button
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Improve Endurance"
+                android:backgroundTint="#FF6600"
+                android:textColor="@android:color/white"
+                android:layout_marginTop="10dp"/>
+
+            <Button
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Stay Healthy"
+                android:backgroundTint="#FF6600"
+                android:textColor="@android:color/white"
+                android:layout_marginTop="10dp"/>
+        </LinearLayout>
+
+        <!-- Workout Frequency -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Workout Frequency"
+            android:textColor="@android:color/white"
+            android:textSize="16sp"
+            android:layout_marginStart="20dp"
+            />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center_horizontal"
+            android:weightSum="3">
+
+            <Button
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="wrap_content"
+                android:text="1 - 2 days/ week"
+                android:backgroundTint="#FF6600"
+                android:textSize="10dp"
+                android:textColor="@android:color/white"
+                android:layout_margin="5dp"/>
+
+            <Button
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="wrap_content"
+                android:text="3 - 4 days/ week"
+                android:backgroundTint="#FF6600"
+                android:textSize="10dp"
+                android:textColor="@android:color/white"
+                android:layout_margin="5dp"/>
+
+            <Button
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="wrap_content"
+                android:text="everyday"
+                android:backgroundTint="#FF6600"
+                android:textColor="@android:color/white"
+                android:layout_margin="5dp"/>
+        </LinearLayout>
+
+        <!-- Workout Duration -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Workout Duration"
+            android:textColor="@android:color/white"
+            android:textSize="16sp"
+            android:layout_marginStart="20dp"
+            android:layout_marginTop="10dp"/>
+
+        <Spinner
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="20dp"
+            android:backgroundTint="#FF6600"
+            android:entries="@array/workout_durations"
+            android:popupBackground="#0D0C1D"
+            android:textColor="@android:color/white"/>
+
+        <!-- Finish Button -->
+        <Button
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Finish"
+            android:backgroundTint="#FF6600"
+            android:textColor="@android:color/white"
+            android:layout_margin="20dp"/>
+
+
+    </LinearLayout>
+</ScrollView>

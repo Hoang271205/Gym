@@ -10,123 +10,218 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:padding="24dp">
+        >
 
         <!-- Background image section with button overlay -->
         <FrameLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
+            <!-- Back button styled like a circular overlay -->
+
             <ImageView
                 android:layout_width="match_parent"
-                android:layout_height="213dp"
+                android:layout_height="250dp"
                 android:scaleType="centerCrop"
-                android:src="@drawable/registerbackground" />
+                android:adjustViewBounds="true"
 
-            <!-- Back button styled like a circular overlay -->
+                android:src="@drawable/register_backkground" />
+
             <ImageButton
-                android:layout_width="48dp"
-                android:layout_height="48dp"
-                android:layout_margin="16dp"
-                android:src="@drawable/back"
-                android:scaleType="center"
-                android:background="@drawable/round_corner"
-                android:layout_gravity="top|start" />
-        </FrameLayout>
+                android:layout_marginStart="20dp"
+                android:layout_width="58dp"
+                android:layout_height="55dp"
+                android:backgroundTint="@color/black"
+                android:text="<"
+                android:textSize="20dp" />
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@drawable/register_shading" />
+
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_gravity="bottom"
             android:layout_marginTop="16dp"
+            android:layout_marginStart="20dp"
             android:text="Register"
             android:textColor="@android:color/white"
-            android:textSize="24sp"
+            android:textSize="35sp"
             android:textStyle="bold" />
+        </FrameLayout>
 
         <!-- Create Account -->
         <ImageView
+
             android:layout_width="370dp"
-            android:layout_height="55dp"
+            android:layout_height="77dp"
+            android:layout_marginStart="20dp"
+            android:paddingStart="-5dp"
+            android:paddingTop="10dp"
             android:scaleType="centerCrop"
             android:src="@drawable/step1" />
+
+
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Create Account"
+            android:layout_marginStart="10dp"
+            android:layout_marginTop="10dp"
             android:textStyle="bold"
-            android:textSize="18sp"
+            android:textSize="25sp"
             android:textColor="@android:color/white" />
 
         <!-- Name Input -->
-        <EditText
+
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="Nguyen Don Tri"
-            android:textColorHint="#FF6600"
-            android:textColor="#FFFFFF"
-            android:drawableStart="@drawable/ic_user"
-            android:padding="12dp"
+            android:layout_marginTop="12dp"
+            android:paddingLeft="10dp"
+            android:orientation="horizontal"
             android:backgroundTint="#FF6600"
-            android:layout_marginTop="12dp" />
+            >
+
+            <ImageView
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:layout_gravity="center_vertical"
+                android:src="@drawable/register_pfp"
+                 />
+
+            <EditText
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Username"
+                android:textColorHint="#808080"
+                android:textColor="#808080"
+                android:backgroundTint="#FF6600"
+                android:inputType="textPersonName" />
+
+        </LinearLayout>
 
         <!-- Email Input -->
-        <EditText
+
+
+
+
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="Nguyentri3072005@gmail.com"
-            android:textColorHint="#FF6600"
-            android:textColor="#FFFFFF"
-            android:drawableStart="@drawable/ic_email"
-            android:padding="12dp"
-            android:backgroundTint="#FF6600"
             android:layout_marginTop="12dp"
-            android:inputType="textEmailAddress" />
+            android:orientation="horizontal"
+            android:backgroundTint="#FF6600"
+            android:paddingLeft="10dp"
+            >
+
+            <ImageView
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:layout_gravity="center_vertical"
+                android:src="@drawable/register_email"
+                />
+
+            <EditText
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Email"
+                android:textColorHint="#808080"
+                android:textColor="#FFFFFF"
+                android:backgroundTint="#FF6600"
+                android:inputType="textEmailAddress" />
+
+        </LinearLayout>
 
         <!-- Password -->
-        <EditText
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="Password"
-            android:textColorHint="#FF6600"
-            android:textColor="#FFFFFF"
-            android:drawableStart="@drawable/ic_lock"
-            android:padding="12dp"
-            android:backgroundTint="#FF6600"
             android:layout_marginTop="12dp"
-            android:inputType="textPassword" />
+            android:layout_marginBottom="10dp"
+            android:orientation="horizontal"
+            android:paddingLeft="10dp"
+            android:backgroundTint="#FF6600"
+            >
 
+            <ImageView
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:layout_gravity="center_vertical"
+                android:src="@drawable/register_password"
+                />
+
+            <EditText
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Password"
+                android:textColorHint="#808080"
+                android:textColor="#FFFFFF"
+                android:backgroundTint="#FF6600"
+                android:inputType="textPassword" />
+
+        </LinearLayout>
+
+        <TextView
+            android:layout_width="120dp"
+            android:layout_height="20dp"
+            android:textColor="@color/white"
+            android:layout_marginStart="20dp"
+
+            android:text="Confirm Password"
+            />
         <!-- Confirm Password -->
-        <EditText
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="Confirm Password"
-            android:textColorHint="#FF6600"
-            android:textColor="#FFFFFF"
-            android:drawableStart="@drawable/ic_lock"
-            android:padding="12dp"
+            android:paddingLeft="10dp"
+            android:orientation="horizontal"
             android:backgroundTint="#FF6600"
-            android:layout_marginTop="12dp"
-            android:inputType="textPassword" />
+            >
+
+
+            <ImageView
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:layout_gravity="center_vertical"
+                android:src="@drawable/register_password"
+                />
+
+            <EditText
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Confirm Password"
+                android:textColorHint="#808080"
+                android:textColor="#FFFFFF"
+                android:backgroundTint="#FF6600"
+                android:inputType="textPassword" />
+
+        </LinearLayout>
 
         <!-- Next Button -->
         <Button
+            android:layout_marginTop="10dp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text=""
             android:backgroundTint="#FF6600"
             android:layout_gravity="center"
-            android:layout_marginTop="24dp"
-            android:drawableEnd="@drawable/ic_arrow_right" />
+
+            android:text=">"
+            android:textAlignment="center"
+            android:textSize="20dp"
+             />
 
         <!-- Login Link -->
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Are you have an account? "
+            android:text="Do you have an account already? "
             android:textColor="#CCCCCC"
             android:layout_gravity="center"
-            android:layout_marginTop="16dp" />
+            />
 
         <TextView
             android:layout_width="wrap_content"
@@ -137,4 +232,5 @@
             android:layout_gravity="center" />
 
     </LinearLayout>
+
 </ScrollView>
