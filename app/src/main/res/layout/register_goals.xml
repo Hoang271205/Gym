@@ -55,11 +55,11 @@
 
             android:layout_width="370dp"
             android:layout_height="77dp"
-            android:layout_marginStart="20dp"
+            android:layout_marginStart="25dp"
             android:paddingStart="-5dp"
             android:paddingTop="10dp"
             android:scaleType="centerCrop"
-            android:src="@drawable/register_step2" />
+            android:src="@drawable/register_step3" />
 
 
 
