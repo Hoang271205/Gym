@@ -57,7 +57,7 @@ public class Login extends AppCompatActivity {
             return;
         }
 
-        if (email.equals("admin@example.com") && password.equals("123456")) {
+                if (email.equals("admin@example.com") && password.equals("123456")) {
             Toast.makeText(this, "Login successful!", Toast.LENGTH_SHORT).show();
         } else {
             Toast.makeText(this, "Invalid email or password", Toast.LENGTH_SHORT).show();
