@@ -14,12 +14,13 @@
 
         <!-- Background Image -->
         <ImageView
+            android:id="@+id/tvImagecard"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:scaleType="centerCrop"
-            android:src="@drawable/workout_cardbackgrounddemo"
+            android:src="@drawable/pushup_card"
             android:contentDescription="@null"
-            android:alpha="0.3" /> <!-- optional: make it semi-transparent -->
+            android:alpha="0.7" /> <!-- optional: make it semi-transparent -->
 
         <!-- Foreground content -->
         <LinearLayout
@@ -32,11 +33,11 @@
                 android:id="@+id/tvWorkoutTitle"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:fontFamily="sans-serif-medium"
                 android:text="Full Body Workout"
-                android:textColor="#1A1A1A"
+                android:textColor="#000000"
                 android:textSize="18sp"
-                android:textStyle="bold"
-                android:fontFamily="sans-serif-medium"/>
+                android:textStyle="bold" />
 
             <TextView
                 android:id="@+id/tvWorkoutDetails"
@@ -44,8 +45,8 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="4dp"
                 android:text="45 min • Intermediate"
-                android:textColor="#666666"
-                android:textSize="14sp"/>
+                android:textColor="#000000"
+                android:textSize="14sp" />
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -59,12 +60,13 @@
                     android:src="@drawable/ic_fire" />
 
                 <TextView
+                    android:id="@+id/tvWorkoutCalories"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="4dp"
                     android:text="320 kcal"
-                    android:textColor="#666666"
-                    android:textSize="12sp"/>
+                    android:textColor="#000000"
+                    android:textSize="12sp" />
             </LinearLayout>
         </LinearLayout>
     </FrameLayout>

@@ -1,4 +1,5 @@
-<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView
+    xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="#0D0C1D">
@@ -29,8 +30,8 @@
                 android:layout_width="58dp"
                 android:layout_height="55dp"
                 android:backgroundTint="@color/black"
-                android:text="<"
-                android:textSize="20dp" />
+                android:src="@drawable/back_btn"
+                android:contentDescription="@string/back_button_desc"/>
 
             <View
                 android:layout_width="match_parent"
@@ -201,7 +202,7 @@
                 android:layout_height="wrap_content"
                 android:backgroundTint="#FF6600"
                 android:layout_gravity="center"
-                android:text="<"
+                android:text="Back"
                 android:textAlignment="center"
                 android:textSize="20dp"
                 />
@@ -213,7 +214,7 @@
                 android:layout_height="wrap_content"
                 android:backgroundTint="#FF6600"
                 android:layout_gravity="center"
-                android:text=">"
+                android:text="Forward"
                 android:textAlignment="center"
                 android:textSize="20dp"
                 />

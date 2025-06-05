@@ -32,8 +32,8 @@
                 android:layout_width="58dp"
                 android:layout_height="55dp"
                 android:backgroundTint="@color/black"
-                android:text="<"
-                android:textSize="20dp" />
+                android:src="@drawable/back_btn"
+                android:contentDescription="@string/back_button_desc" />
             <View
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
@@ -95,7 +95,7 @@
 
             <EditText
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="48dp"
                 android:hint="Username"
                 android:textColorHint="#808080"
                 android:textColor="#808080"
@@ -127,7 +127,7 @@
 
             <EditText
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="48dp"
                 android:hint="Email"
                 android:textColorHint="#808080"
                 android:textColor="#FFFFFF"
@@ -156,7 +156,7 @@
 
             <EditText
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="48dp"
                 android:hint="Password"
                 android:textColorHint="#808080"
                 android:textColor="#FFFFFF"
@@ -176,7 +176,7 @@
         <!-- Confirm Password -->
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="48dp"
             android:paddingLeft="10dp"
             android:orientation="horizontal"
             android:backgroundTint="#FF6600"
@@ -192,7 +192,7 @@
 
             <EditText
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="48dp"
                 android:hint="Confirm Password"
                 android:textColorHint="#808080"
                 android:textColor="#FFFFFF"
