@@ -33,13 +33,14 @@
     <!-- Back Button -->
     <ImageButton
         android:id="@+id/backButton"
-        android:layout_width="32dp"
-        android:layout_height="32dp"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
         android:background="@android:color/transparent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         android:layout_marginTop="24dp"
-        android:layout_marginStart="16dp"/>
+        android:layout_marginStart="16dp"
+        android:contentDescription="@string/back_button_desc"/>
 
     <TextView
         android:id="@+id/tvWelcome"
@@ -168,7 +169,8 @@
             android:background="@drawable/rounded_social_transparent"
             android:scaleType="centerInside"
             android:src="@drawable/ic_apple"
-            android:layout_marginEnd="16dp" />
+            android:layout_marginEnd="16dp"
+            android:contentDescription="@string/login_apple"/>
 
         <ImageButton
             android:id="@+id/btnFacebook"
@@ -177,7 +179,8 @@
             android:background="@drawable/rounded_social_transparent"
             android:scaleType="centerInside"
             android:src="@drawable/ic_facebook"
-            android:layout_marginEnd="16dp" />
+            android:layout_marginEnd="16dp"
+            android:contentDescription="@string/login_face"/>
 
         <ImageButton
             android:id="@+id/btnGoogle"
@@ -185,7 +188,8 @@
             android:layout_height="48dp"
             android:background="@drawable/rounded_social_transparent"
             android:scaleType="centerInside"
-            android:src="@drawable/ic_google" />
+            android:src="@drawable/ic_google"
+            android:contentDescription="@string/login_google"/>
 
     </LinearLayout>
 

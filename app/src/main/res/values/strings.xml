@@ -1,5 +1,9 @@
 <resources>
     <string name="app_name">My Application</string>
+    <string name="back_button_desc">Back</string>
+    <string name="login_face">Face</string>
+    <string name="login_google">Google</string>
+    <string name="login_apple">Apple</string>
     <string-array name="workout_durations">
         <item>15 minutes</item>
         <item>30 minutes</item>
