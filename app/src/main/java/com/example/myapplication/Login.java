@@ -36,7 +36,6 @@ public class Login extends AppCompatActivity {
         tvRegisterHere.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                // Chuyển sang màn hình đăng ký
                 Intent intent = new Intent(Login.this, RegisterActivity.class);
                 startActivity(intent);
             }
@@ -52,15 +51,16 @@ public class Login extends AppCompatActivity {
             return;
         }
 
-        if (TextUtils.isEmpty(password)) {
-            etPassword.setError("Password is required");
-            return;
-        }
-
-                if (email.equals("admin@example.com") && password.equals("123456")) {
+        if (email.equals("admin@example.com") && password.equals("123456")) {
             Toast.makeText(this, "Login successful!", Toast.LENGTH_SHORT).show();
+
+            Intent intent = new Intent(Login.this, HomepageActivity.class);
+            startActivity(intent);
+
+            finish();
         } else {
             Toast.makeText(this, "Invalid email or password", Toast.LENGTH_SHORT).show();
         }
+
     }
 }
