@@ -2,6 +2,8 @@ package com.example.myapplication;
 
 import android.view.LayoutInflater;
 import android.view.View;
+import android.content.Context;
+import android.content.Intent;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -18,6 +20,8 @@ public class WorkoutCardAdapter extends RecyclerView.Adapter<WorkoutCardAdapter.
         this.workoutList = workoutList;
     }
 
+
+
     @NonNull
     @Override
     public WorkoutViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
@@ -32,6 +36,12 @@ public class WorkoutCardAdapter extends RecyclerView.Adapter<WorkoutCardAdapter.
         holder.details.setText(workoutcard.getDetails());
         holder.calories.setText(String.valueOf(workoutcard.getCalories()));
         holder.image.setImageBitmap(workoutcard.getImage());
+
+        holder.itemView.setOnClickListener(v -> {
+            Context context = v.getContext();
+            Intent intent = new Intent(context, workoutcard.getActivity());
+            context.startActivity(intent);
+        });
     }
 
     @Override
@@ -39,7 +49,7 @@ public class WorkoutCardAdapter extends RecyclerView.Adapter<WorkoutCardAdapter.
         return workoutList.size();
     }
     static class WorkoutViewHolder extends RecyclerView.ViewHolder{
-        TextView title,details,calories;
+        TextView title,details,calories,activity;
         ImageView image;
         public WorkoutViewHolder(@NonNull View itemview){
             super(itemview);
