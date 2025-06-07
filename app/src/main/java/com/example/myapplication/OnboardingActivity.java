@@ -72,16 +72,15 @@ public class OnboardingActivity extends AppCompatActivity {
                     currentPage++;
                 }
                 viewPager.setCurrentItem(currentPage, true);
-                sliderHandler.postDelayed(this, 2000); // Lặp lại sau 2 giây
+                sliderHandler.postDelayed(this, 2000);
             }
         };
-        sliderHandler.postDelayed(sliderRunnable, 2000); // Bắt đầu sau 2 giây
+        sliderHandler.postDelayed(sliderRunnable, 2000);
     }
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        // Dọn dẹp Handler để tránh memory leak
         if (sliderHandler != null && sliderRunnable != null) {
             sliderHandler.removeCallbacks(sliderRunnable);
         }
@@ -90,7 +89,6 @@ public class OnboardingActivity extends AppCompatActivity {
     @Override
     protected void onPause() {
         super.onPause();
-        // Tạm dừng auto-slide khi Activity bị pause
         if (sliderHandler != null && sliderRunnable != null) {
             sliderHandler.removeCallbacks(sliderRunnable);
         }

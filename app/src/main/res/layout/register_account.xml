@@ -17,39 +17,41 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
-            <!-- Back button styled like a circular overlay -->
-
             <ImageView
                 android:layout_width="match_parent"
                 android:layout_height="250dp"
                 android:scaleType="centerCrop"
                 android:adjustViewBounds="true"
-
                 android:src="@drawable/register_backkground" />
 
             <ImageButton
-                android:layout_marginStart="20dp"
-                android:layout_width="58dp"
-                android:layout_height="55dp"
-                android:backgroundTint="@color/black"
-                android:src="@drawable/back_btn"
-                android:contentDescription="@string/back_button_desc" />
+                android:id="@+id/backButton"
+                android:layout_width="56dp"
+                android:layout_height="56dp"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="16dp"
+                android:background="@drawable/ic_launcher_background"
+                android:src="@drawable/back"
+                android:scaleType="centerInside"
+                android:padding="12dp"
+                android:contentDescription="Back button" />
+
             <View
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:background="@drawable/register_shading" />
 
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="bottom"
-            android:layout_marginTop="16dp"
-            android:layout_marginStart="20dp"
-            android:text="Register"
-            android:textColor="@android:color/white"
-            android:textSize="35sp"
-            android:textStyle="bold" />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="bottom"
+                android:layout_marginTop="16dp"
+                android:layout_marginStart="20dp"
+                android:text="Register"
+                android:textColor="@android:color/white"
+                android:textSize="35sp"
+                android:textStyle="bold" />
         </FrameLayout>
 
         <!-- Create Account -->
@@ -91,7 +93,7 @@
                 android:layout_height="30dp"
                 android:layout_gravity="center_vertical"
                 android:src="@drawable/register_pfp"
-                 />
+                />
 
             <EditText
                 android:layout_width="match_parent"
@@ -212,7 +214,7 @@
             android:text=">"
             android:textAlignment="center"
             android:textSize="20dp"
-             />
+            />
 
         <!-- Login Link -->
         <TextView
