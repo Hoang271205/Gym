@@ -54,7 +54,7 @@ public class Login extends AppCompatActivity {
         if (email.equals("admin@example.com") && password.equals("123456")) {
             Toast.makeText(this, "Login successful!", Toast.LENGTH_SHORT).show();
 
-            Intent intent = new Intent(Login.this, HomepageActivity.class);
+            Intent intent = new Intent(Login.this, MainActivity.class);
             startActivity(intent);
 
             finish();
