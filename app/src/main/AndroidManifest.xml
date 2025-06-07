@@ -27,6 +27,9 @@
         <activity android:name=".RegisterActivity" />
         <activity android:name=".MainActivity" />
         <activity android:name=".PushupDetailsActivity" />
+        <activity android:name=".WorkoutListActivity"/>
+        <activity android:name=".RunningDetailsActivity"/>
+        <activity android:name=".PlankDetailsActivity"/>
 
     </application>
 

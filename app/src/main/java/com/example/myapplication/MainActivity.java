@@ -1,8 +1,11 @@
 package com.example.myapplication;
 
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
+import android.view.View;
+import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -20,6 +23,17 @@ public class MainActivity extends AppCompatActivity {
             super.onCreate(savedInstanceState);
             setContentView(R.layout.homepage);
 
+            TextView seeAllTextView = findViewById(R.id.tvSeeAll);
+
+            seeAllTextView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent intent = new Intent(MainActivity.this,WorkoutListActivity.class);
+                    startActivity(intent);
+                }
+            });
+
+
             recyclerView = findViewById(R.id.recyclerViewWorkouts);
             recyclerView.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false));
 
@@ -30,8 +44,8 @@ public class MainActivity extends AppCompatActivity {
             // Sample data
             workoutList = new ArrayList<>();
             workoutList.add(new WorkoutCard("Push-ups", "4 sets of 10 reps", 50, pushupBitmap,PushupDetailsActivity.class));
-            workoutList.add(new WorkoutCard("Running", "5 km run", 300, RunningBitmap,PushupDetailsActivity.class));
-            workoutList.add(new WorkoutCard("Plank", "Hold for 1 minute", 30, PlankBitmap, PushupDetailsActivity.class));
+            workoutList.add(new WorkoutCard("Running", "5 km run", 300, RunningBitmap, RunningDetailsActivity.class));
+            workoutList.add(new WorkoutCard("Plank", "Hold for 1 minute", 30, PlankBitmap, PlankDetailsActivity.class));
 
             // Set adapter
             workoutAdapter = new WorkoutCardAdapter(workoutList);
