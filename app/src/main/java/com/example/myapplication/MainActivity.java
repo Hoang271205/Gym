@@ -44,8 +44,8 @@ public class MainActivity extends AppCompatActivity {
             // Sample data
             workoutList = new ArrayList<>();
             workoutList.add(new WorkoutCard("Push-ups", "4 sets of 10 reps", 50, pushupBitmap,PushupDetailsActivity.class));
-            workoutList.add(new WorkoutCard("Running", "5 km run", 300, RunningBitmap,PushupDetailsActivity.class));
-            workoutList.add(new WorkoutCard("Plank", "Hold for 1 minute", 30, PlankBitmap, PushupDetailsActivity.class));
+            workoutList.add(new WorkoutCard("Running", "5 km run", 300, RunningBitmap, RunningDetailsActivity.class));
+            workoutList.add(new WorkoutCard("Plank", "Hold for 1 minute", 30, PlankBitmap, PlankDetailsActivity.class));
 
             // Set adapter
             workoutAdapter = new WorkoutCardAdapter(workoutList);

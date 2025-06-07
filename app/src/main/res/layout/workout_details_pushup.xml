@@ -29,7 +29,7 @@
             android:layout_height="wrap_content"
             android:orientation="horizontal"
             android:gravity="center_vertical"
-            android:padding="16dp"
+
             android:layout_gravity="top"
             android:background="@android:color/transparent">
 
@@ -53,6 +53,7 @@
             <ImageButton
                 android:id="@+id/btnFavorite"
                 android:layout_width="48dp"
+                android:paddingRight="16dp"
                 android:layout_height="48dp"
                 android:background="@android:color/transparent"
                 android:src="@drawable/ic_favorite"

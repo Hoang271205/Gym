@@ -38,8 +38,8 @@ public class WorkoutListActivity extends AppCompatActivity {
 
         workoutCardList = new ArrayList<>();
         workoutCardList.add(new WorkoutCard("Push-ups", "3 sets of 15 reps", 50, pushupBitmap, PushupDetailsActivity.class));
-        workoutCardList.add(new WorkoutCard("Running", "5 km run", 300, runningBitmap, PushupDetailsActivity.class));
-        workoutCardList.add(new WorkoutCard("Plank", "Hold for 1 minute", 30, plankBitmap, PushupDetailsActivity.class));
+        workoutCardList.add(new WorkoutCard("Running", "5 km run", 300, runningBitmap, RunningDetailsActivity.class));
+        workoutCardList.add(new WorkoutCard("Plank", "Hold for 1 minute", 30, plankBitmap, PlankDetailsActivity.class));
 
         adapter = new WorkoutCardAdapter(workoutCardList);
         recyclerView.setAdapter(adapter);
