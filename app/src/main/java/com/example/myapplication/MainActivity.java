@@ -21,22 +21,22 @@ public class MainActivity extends AppCompatActivity {
             setContentView(R.layout.homepage);
 
             recyclerView = findViewById(R.id.recyclerViewWorkouts);
-            recyclerView.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL,false));
+            recyclerView.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false));
 
             Bitmap pushupBitmap = BitmapFactory.decodeResource(getResources(), R.drawable.pushup_card);
             Bitmap RunningBitmap = BitmapFactory.decodeResource(getResources(), R.drawable.running_card);
             Bitmap PlankBitmap = BitmapFactory.decodeResource(getResources(), R.drawable.plank_card);
 
-        // Sample data
-        workoutList = new ArrayList<>();
-        workoutList.add(new WorkoutCard("Push-ups", "3 sets of 15 reps", 50,pushupBitmap ));
-        workoutList.add(new WorkoutCard("Running", "5 km run", 300,RunningBitmap));
-        workoutList.add(new WorkoutCard("Plank", "Hold for 1 minute", 30,PlankBitmap));
+            // Sample data
+            workoutList = new ArrayList<>();
+            workoutList.add(new WorkoutCard("Push-ups", "3 sets of 15 reps", 50, pushupBitmap));
+            workoutList.add(new WorkoutCard("Running", "5 km run", 300, RunningBitmap));
+            workoutList.add(new WorkoutCard("Plank", "Hold for 1 minute", 30, PlankBitmap));
 
-        // Set adapter
-        workoutAdapter = new WorkoutCardAdapter(workoutList);
-        recyclerView.setAdapter(workoutAdapter);
-    }
+            // Set adapter
+            workoutAdapter = new WorkoutCardAdapter(workoutList);
+            recyclerView.setAdapter(workoutAdapter);
+        }
 
 
 }

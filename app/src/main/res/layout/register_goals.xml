@@ -25,13 +25,16 @@
                 android:src="@drawable/register_backkground" />
 
             <ImageButton
-                android:layout_marginStart="20dp"
-                android:layout_width="58dp"
-                android:layout_height="55dp"
-                android:backgroundTint="@color/black"
-                android:src="@drawable/back_btn"
-                android:contentDescription="@string/back_button_desc"/>
-
+                android:id="@+id/backButton"
+                android:layout_width="56dp"
+                android:layout_height="56dp"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="16dp"
+                android:background="@drawable/ic_launcher_background"
+                android:src="@drawable/back"
+                android:scaleType="centerInside"
+                android:padding="12dp"
+                android:contentDescription="Back button" />
 
             <View
                 android:layout_width="match_parent"
@@ -53,7 +56,7 @@
         <!-- Create Account -->
         <ImageView
 
-            android:layout_width="370dp"
+            android:layout_width="428dp"
             android:layout_height="77dp"
             android:layout_marginStart="25dp"
             android:paddingStart="-5dp"
