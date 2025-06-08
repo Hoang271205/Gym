@@ -6,15 +6,36 @@
     android:background="#000000"
     android:padding="24dp">
 
-    <!-- Centered Loading Animation and Text -->
+    <Chronometer
+        android:id="@+id/chronometerWorkoutTimer"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="40dp"
+        android:textColor="#FFFFFF"
+        android:textSize="48sp" />
+
+    <TextView
+        android:id="@+id/tvCurrentExercise"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/chronometerWorkoutTimer"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="24dp"
+        android:text="Current Exercise"
+        android:textColor="#FFFFFF"
+        android:textSize="22sp"
+        android:gravity="center"/>
+
     <LinearLayout
+        android:id="@+id/llWorkoutProgressInfo"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="vertical"
         android:layout_centerInParent="true"
         android:gravity="center">
 
-        <!-- Default loading spinner -->
         <ProgressBar
             android:id="@+id/progressLoading"
             android:layout_width="64dp"
@@ -26,23 +47,43 @@
             android:id="@+id/tvInProgress"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Workout in Progress..."
+            android:text="Keep doing..."
             android:textColor="#FFFFFF"
             android:textSize="20sp"
             android:layout_marginTop="16dp"
             android:gravity="center"/>
     </LinearLayout>
 
-    <!-- End Workout Button -->
-    <Button
-        android:id="@+id/btnEndWorkout"
+    <!-- Các nút điều khiển -->
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:orientation="horizontal"
         android:layout_alignParentBottom="true"
-        android:text="End Workout"
-        android:backgroundTint="#FF0000"
-        android:textColor="#FFFFFF"
-        android:textStyle="bold"
-        android:padding="12dp"
-        android:layout_marginTop="24dp"/>
+        android:layout_marginBottom="16dp">
+
+        <Button
+            android:id="@+id/btnPauseResumeWorkout"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Stop"
+            android:backgroundTint="#FF6600"
+            android:textColor="#000000"
+            android:textStyle="bold"
+            android:padding="12dp"
+            android:layout_marginEnd="8dp"/>
+
+        <Button
+            android:id="@+id/btnEndWorkout"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="End"
+            android:backgroundTint="#FF6600"
+            android:textColor="#FFFFFF"
+            android:textStyle="bold"
+            android:padding="12dp"
+            android:layout_marginStart="8dp"/>
+    </LinearLayout>
 </RelativeLayout>

@@ -65,7 +65,6 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         return id;
     }
 
-    // Kiểm tra đăng nhập
     public boolean checkUser(String email, String password) {
         SQLiteDatabase db = this.getReadableDatabase();
 

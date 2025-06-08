@@ -40,7 +40,6 @@ public class WorkoutCardAdapter extends RecyclerView.Adapter<WorkoutCardAdapter.
         holder.details.setText(workoutcard.getDetails());
         holder.calories.setText(String.valueOf(workoutcard.getCalories()));
         holder.image.setImageBitmap(workoutcard.getImage());
-
         holder.itemView.setOnClickListener(v -> {
             Context context = v.getContext();
             Intent intent = new Intent(context, workoutcard.getActivity());
