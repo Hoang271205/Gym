@@ -14,6 +14,7 @@
         android:theme="@style/Theme.MyApplication"
         tools:targetApi="31">
 
+        <!-- Main launcher activity -->
         <activity
             android:name=".OnboardingActivity"
             android:exported="true">
@@ -23,14 +24,49 @@
             </intent-filter>
         </activity>
 
-        <activity android:name=".Login" />
-        <activity android:name=".RegisterActivity" />
-        <activity android:name=".MainActivity" />
-        <activity android:name=".PushupDetailsActivity" />
-        <activity android:name=".WorkoutListActivity"/>
-        <activity android:name=".RunningDetailsActivity"/>
-        <activity android:name=".PlankDetailsActivity"/>
-        <activity android:name=".TwistDetailsActivity"/>
+        <!-- Authentication activities -->
+        <activity
+            android:name=".Login"
+            android:theme="@style/Theme.MyApplication" />
+
+        <activity
+            android:name=".RegisterActivity"
+            android:theme="@style/Theme.MyApplication" />
+
+        <!-- Main app activities -->
+        <activity
+            android:name=".MainActivity"
+            android:theme="@style/Theme.MyApplication" />
+
+        <activity
+            android:name=".PushupDetailsActivity"
+            android:parentActivityName=".MainActivity" />
+
+        <activity
+            android:name=".TwistDetailsActivity"
+            android:parentActivityName=".MainActivity" />
+
+        <activity
+            android:name=".WorkoutListActivity"
+            android:parentActivityName=".MainActivity" />
+
+        <activity
+            android:name=".RunningDetailsActivity"
+            android:parentActivityName=".MainActivity" />
+
+        <activity
+            android:name=".PlankDetailsActivity"
+            android:parentActivityName=".MainActivity" />
+
+        <!-- Admin system activities -->
+        <activity
+            android:name=".AdminActivity"
+            android:theme="@style/Theme.MyApplication"
+            android:label="Admin Panel"
+            android:parentActivityName=".Login" />
+
+
+
 
     </application>
 

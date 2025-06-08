@@ -218,7 +218,7 @@
                 android:layout_height="wrap_content"
                 android:backgroundTint="#FF6600"
                 android:layout_gravity="center"
-                android:text="Forward"
+                android:text="Next"
                 android:textAlignment="center"
                 android:textSize="20dp"
                 />

@@ -54,17 +54,17 @@
         </FrameLayout>
 
         <!-- Create Account -->
+
+
         <ImageView
 
             android:layout_width="428dp"
-            android:layout_height="77dp"
+            android:layout_height="67dp"
             android:layout_marginStart="25dp"
             android:paddingStart="-5dp"
             android:paddingTop="10dp"
             android:scaleType="centerCrop"
             android:src="@drawable/register_step3" />
-
-
 
         <TextView
             android:layout_width="wrap_content"
