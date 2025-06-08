@@ -119,6 +119,19 @@ public class MainActivity extends AppCompatActivity {
             startActivity(intent);
         });
 
+        ImageView profile = findViewById(R.id.profile_image);
+        profile.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(MainActivity.this, ProfileActivity.class);
+                // Add user info if needed
+                intent.putExtra("user_id", currentUserId);
+                intent.putExtra("username", currentUsername);
+                intent.putExtra("email", currentEmail);
+                startActivity(intent);
+            }
+        });
+
 
     }
 
