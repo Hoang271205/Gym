@@ -101,7 +101,7 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        // Click vào "See all" trong Other Workout
+
         TextView tvSeeAll = findViewById(R.id.tvSeeAll);
         if (tvSeeAll != null) {
             tvSeeAll.setOnClickListener(new View.OnClickListener() {
@@ -112,6 +112,14 @@ public class MainActivity extends AppCompatActivity {
                 }
             });
         }
+
+        View featuredCard = findViewById(R.id.cardTwist);
+        featuredCard.setOnClickListener(v -> {
+            Intent intent = new Intent(MainActivity.this, TwistDetailsActivity.class);
+            startActivity(intent);
+        });
+
+
     }
 
     private void showUserMenu() {
@@ -161,9 +169,9 @@ public class MainActivity extends AppCompatActivity {
 
         // Sample data với WorkoutCard
         workoutList = new ArrayList<>();
-        workoutList.add(new WorkoutCard("Push-ups", "3 sets of 15 reps", 50, pushupBitmap,PushupDetailsActivity.class));
-        workoutList.add(new WorkoutCard("Running", "5 km run", 300, RunningBitmap,RunningDetailsActivity.class));
-        workoutList.add(new WorkoutCard("Plank", "Hold for 1 minute", 30, PlankBitmap,RunningDetailsActivity.class));
+        workoutList.add(new WorkoutCard("Push-ups", "3 sets of 15 reps", 50, pushupBitmap,PushupDetailsActivity.class,"chest"));
+        workoutList.add(new WorkoutCard("Running", "5 km run", 300, RunningBitmap,RunningDetailsActivity.class,"Stamina"));
+        workoutList.add(new WorkoutCard("Plank", "Hold for 1 minute", 30, PlankBitmap,RunningDetailsActivity.class,"core"));
 
         // Set adapter
         workoutAdapter = new WorkoutCardAdapter(workoutList);

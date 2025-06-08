@@ -9,14 +9,18 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.recyclerview.widget.DiffUtil;
 import androidx.recyclerview.widget.RecyclerView;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class WorkoutCardAdapter extends RecyclerView.Adapter<WorkoutCardAdapter.WorkoutViewHolder>  {
     private List<WorkoutCard> workoutList;
+    private List<WorkoutCard> filteredList;
 
     public WorkoutCardAdapter(List<WorkoutCard> workoutList) {
+        this.filteredList = new ArrayList<>(workoutList);
         this.workoutList = workoutList;
     }
 
@@ -31,7 +35,7 @@ public class WorkoutCardAdapter extends RecyclerView.Adapter<WorkoutCardAdapter.
 
     @Override
     public void onBindViewHolder(@NonNull WorkoutViewHolder holder, int position) {
-        WorkoutCard workoutcard = workoutList.get(position);
+        WorkoutCard workoutcard = filteredList.get(position);
         holder.title.setText(workoutcard.getTitle());
         holder.details.setText(workoutcard.getDetails());
         holder.calories.setText(String.valueOf(workoutcard.getCalories()));
@@ -46,8 +50,26 @@ public class WorkoutCardAdapter extends RecyclerView.Adapter<WorkoutCardAdapter.
 
     @Override
     public int getItemCount() {
-        return workoutList.size();
+        return filteredList.size();
     }
+
+    public void filter(String query){
+        filteredList.clear();
+        if (query == null || query.trim().isEmpty()) {
+            filteredList.addAll(workoutList);
+        } else {
+            String lowerQuery = query.toLowerCase();
+            for (WorkoutCard c : workoutList){
+                if (c.getTitle().toLowerCase().contains(lowerQuery)){
+                    filteredList.add(c);
+                }
+            }
+        }
+      notifyDataSetChanged();
+    }
+
+
+
     static class WorkoutViewHolder extends RecyclerView.ViewHolder{
         TextView title,details,calories,activity;
         ImageView image;

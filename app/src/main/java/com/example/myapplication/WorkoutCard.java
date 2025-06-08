@@ -5,18 +5,21 @@ import android.graphics.Bitmap;
 public class WorkoutCard {
     private String title;
     private String details;
+
+    private String type;
     private int calories;
 
     private Bitmap image;
 
     private Class<?> activity;
 
-    public WorkoutCard(String title, String details, int calories, Bitmap image, Class<?> activity) {
+    public WorkoutCard(String title, String details, int calories, Bitmap image, Class<?> activity, String type) {
         this.title = title;
         this.details = details;
         this.calories = calories;
         this.image = image;
         this.activity = activity;
+        this.type = type;
     }
 
     public String getTitle() { return title; }
@@ -25,6 +28,8 @@ public class WorkoutCard {
     public int getCalories() { return calories; }
 
     public Bitmap getImage() { return image;}
+
+    public String getType() {return type;}
 
 
 }
