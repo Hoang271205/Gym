@@ -15,11 +15,15 @@ public class Login extends AppCompatActivity {
     EditText etEmail, etPassword;
     Button btnLogin;
     TextView tvRegisterHere;
+    DatabaseHelper databaseHelper;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.login);
+
+        // Khởi tạo database helper
+        databaseHelper = new DatabaseHelper(this);
 
         etEmail = findViewById(R.id.etEmail);
         etPassword = findViewById(R.id.etPassword);
@@ -48,19 +52,39 @@ public class Login extends AppCompatActivity {
 
         if (TextUtils.isEmpty(email)) {
             etEmail.setError("Email is required");
+            etEmail.requestFocus();
             return;
         }
 
+        if (TextUtils.isEmpty(password)) {
+            etPassword.setError("Password is required");
+            etPassword.requestFocus();
+            return;
+        }
+
+        // Kiểm tra admin account
         if (email.equals("admin@example.com") && password.equals("123456")) {
-            Toast.makeText(this, "Login successful!", Toast.LENGTH_SHORT).show();
-
-            Intent intent = new Intent(Login.this, MainActivity.class);
+            Toast.makeText(this, "Welcome Admin!", Toast.LENGTH_SHORT).show();
+            Intent intent = new Intent(Login.this, AdminActivity.class);
             startActivity(intent);
+            finish();
+            return;
+        }
 
+        // Kiểm tra user trong database
+        if (databaseHelper.checkUser(email, password)) {
+            User user = databaseHelper.getUserByEmail(email);
+            Toast.makeText(this, "Welcome " + user.getUsername() + "!", Toast.LENGTH_SHORT).show();
+
+            // Truyền thông tin user sang MainActivity
+            Intent intent = new Intent(Login.this, MainActivity.class);
+            intent.putExtra("user_id", user.getId());
+            intent.putExtra("username", user.getUsername());
+            intent.putExtra("email", user.getEmail());
+            startActivity(intent);
             finish();
         } else {
             Toast.makeText(this, "Invalid email or password", Toast.LENGTH_SHORT).show();
         }
-
     }
 }
