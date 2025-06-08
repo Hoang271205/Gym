@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#000000"
+    android:padding="24dp">
+
+    <!-- Centered Loading Animation and Text -->
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:layout_centerInParent="true"
+        android:gravity="center">
+
+        <!-- Default loading spinner -->
+        <ProgressBar
+            android:id="@+id/progressLoading"
+            android:layout_width="64dp"
+            android:layout_height="64dp"
+            android:indeterminate="true"
+            android:layout_gravity="center" />
+
+        <TextView
+            android:id="@+id/tvInProgress"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Workout in Progress..."
+            android:textColor="#FFFFFF"
+            android:textSize="20sp"
+            android:layout_marginTop="16dp"
+            android:gravity="center"/>
+    </LinearLayout>
+
+    <!-- End Workout Button -->
+    <Button
+        android:id="@+id/btnEndWorkout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:text="End Workout"
+        android:backgroundTint="#FF0000"
+        android:textColor="#FFFFFF"
+        android:textStyle="bold"
+        android:padding="12dp"
+        android:layout_marginTop="24dp"/>
+</RelativeLayout>
