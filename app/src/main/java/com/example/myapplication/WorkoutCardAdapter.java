@@ -9,6 +9,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.recyclerview.widget.DiffUtil;
 import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.ArrayList;
@@ -56,7 +57,7 @@ public class WorkoutCardAdapter extends RecyclerView.Adapter<WorkoutCardAdapter.
         filteredList.clear();
         if (query == null || query.trim().isEmpty()) {
             filteredList.addAll(workoutList);
-        }else {
+        } else {
             String lowerQuery = query.toLowerCase();
             for (WorkoutCard c : workoutList){
                 if (c.getTitle().toLowerCase().contains(lowerQuery)){
@@ -64,7 +65,7 @@ public class WorkoutCardAdapter extends RecyclerView.Adapter<WorkoutCardAdapter.
                 }
             }
         }
-        notifyDataSetChanged();
+      notifyDataSetChanged();
     }
 
 
