@@ -1,10 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:background="#2B2B3D">
-    
+    android:background="#2B2B3D"
+   >
+
+    <!-- Title + Back Button (untouched) -->
     <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content">
@@ -19,7 +22,6 @@
             android:textColor="#FFFFFF"
             android:contentDescription="@string/back_button" />
 
-
         <TextView
             android:id="@+id/tvWorkoutListTitle"
             android:layout_width="match_parent"
@@ -30,16 +32,50 @@
             android:textStyle="bold"
             android:gravity="center"
             android:layout_marginBottom="16dp"/>
+    </LinearLayout>
 
-</LinearLayout>
+    <!-- Search bar inserted below -->
+    <LinearLayout
+       android:layout_margin="12dp"
+        android:id="@+id/llSearch"
+        android:layout_width="match_parent"
+        android:layout_height="56dp"
+        android:layout_marginTop="16dp"
+        android:background="#1E1E1E"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        android:padding="12dp">
 
+        <ImageView
+            android:id="@+id/btnSearch"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:src="@drawable/ic_search_white"
+            android:contentDescription="Search" />
 
+        <EditText
 
+            android:id="@+id/etSearch"
+            android:layout_width="0dp"
+            android:layout_height="48dp"
+            android:layout_weight="1"
+            android:layout_marginStart="12dp"
+            android:background="@null"
+            android:hint="Search workout..."
+            android:imeOptions="actionSearch"
+            android:inputType="text"
+            android:maxLines="1"
+            android:textColor="#FFFFFF"
+            android:textColorHint="#888888"
+            android:textSize="16sp"/>
+    </LinearLayout>
+
+    <!-- RecyclerView -->
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recyclerViewWorkouts"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
         android:clipToPadding="false"
-        android:padding="16dp"/>
-
+        android:paddingTop="16dp" />
 </LinearLayout>

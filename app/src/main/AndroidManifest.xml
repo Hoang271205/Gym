@@ -30,6 +30,7 @@
         <activity android:name=".WorkoutListActivity"/>
         <activity android:name=".RunningDetailsActivity"/>
         <activity android:name=".PlankDetailsActivity"/>
+        <activity android:name=".TwistDetailsActivity"/>
 
     </application>
 
