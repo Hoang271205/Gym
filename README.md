@@ -36,3 +36,54 @@ Gym App is designed to be your personal workout companion. Whether you’re a be
 - Progress tracking & analytics
 - Notifications for scheduled workouts
 - Integration with Firebase for user authentication and cloud sync  
+## Built With
+
+- **Language**: Kotlin (preferred), Java (legacy modules)
+- **IDE**: Android Studio Arctic Fox (2020.3.1) or higher
+- **Architecture**: MVVM + Repository Pattern
+- **UI Toolkit**: XML layouts & Material Components
+- **Dependency Injection**: Hilt
+- **Network**: Retrofit + OkHttp
+- **Database**: Room (Jetpack)
+- **Authentication & Sync**: Firebase Auth & Firestore
+- **Image Loading**: Glide
+- **Charting**: MPAndroidChart
+
+---
+
+## Prerequisites
+
+Before you begin, ensure you have met the following requirements:
+
+- Android Studio installed (Arctic Fox or newer)
+- Android SDK Platform 30+
+- JDK 8 or higher
+- Internet connection for Firebase & API requests
+- (Optional) A physical device or emulator running Android 6.0 (API 23)+
+
+---
+
+## Installation & Setup
+
+1. **Clone the repo**
+   ```bash
+   git clone https://github.com/Hoang271205/Gym.git
+   cd Gym
+   ```
+
+2. **Open in Android Studio**
+    - `File` → `Open` → Select the `Gym` directory
+
+3. **Configure Firebase**
+    - Create a Firebase project in the [Firebase Console](https://console.firebase.google.com/)
+    - Add an Android app with your package name (e.g., `com.hoang.gymapp`)
+    - Download `google-services.json` and place it in `app/`
+
+4. **Build the project**
+    - Gradle will sync and download dependencies
+    - Run `./gradlew assembleDebug` or click the Run button in Android Studio
+
+5. **Run on Device/Emulator**
+    - Select a device or emulator and hit **Run**
+
+---
