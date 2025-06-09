@@ -208,3 +208,65 @@ interface ExerciseDao {
 ```
 
 ---
+## Database Schema
+
+```sql
+-- User table
+CREATE TABLE user_profile (
+  uid TEXT PRIMARY KEY,
+  displayName TEXT,
+  email TEXT,
+  createdAt INTEGER
+);
+
+-- Exercise table
+CREATE TABLE exercise_table (
+  id TEXT PRIMARY KEY,
+  name TEXT,
+  description TEXT,
+  muscleGroup TEXT,
+  imageUrl TEXT
+);
+
+-- Workout log
+CREATE TABLE workout_log (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  userUid TEXT,
+  workoutDate INTEGER,
+  exerciseId TEXT,
+  sets INTEGER,
+  reps INTEGER,
+  weight REAL
+);
+```
+
+---
+
+## Notifications & Alarms
+
+We schedule daily reminders using `AlarmManager`:
+
+```kotlin
+fun scheduleDailyWorkoutReminder(context: Context, hour: Int, minute: Int) {
+  val alarmIntent = Intent(context, WorkoutReminderReceiver::class.java)
+  val pendingIntent = PendingIntent.getBroadcast(
+    context, 0, alarmIntent, PendingIntent.FLAG_UPDATE_CURRENT
+  )
+  val calendar = Calendar.getInstance().apply {
+    set(Calendar.HOUR_OF_DAY, hour)
+    set(Calendar.MINUTE, minute)
+    set(Calendar.SECOND, 0)
+  }
+  val alarmManager = context.getSystemService(Context.ALARM_SERVICE) as AlarmManager
+  alarmManager.setInexactRepeating(
+    AlarmManager.RTC_WAKEUP,
+    calendar.timeInMillis,
+    AlarmManager.INTERVAL_DAY,
+    pendingIntent
+  )
+}
+```
+
+---
+
+
