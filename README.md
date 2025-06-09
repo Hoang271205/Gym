@@ -421,5 +421,38 @@ Our project uses GitHub Actions to automate builds, tests, and releases.
 To trigger a release build on a new tag, see `.github/workflows/release.yml`.
 
 ---
+## Localization & Internationalization
+
+We support multiple languages via Android’s resource system:
+
+- res/values/strings.xml (English – default)
+- res/values-es/strings.xml (Spanish)
+- res/values-fr/strings.xml (French)
+
+To add a new language:
+
+1. Duplicate `res/values/strings.xml` into `res/values-<locale>/`.
+2. Translate all `<string>` entries.
+3. Test by changing your device/emulator locale.
+
+---
+
+## Security Considerations
+
+- All network traffic is encrypted with HTTPS.
+- Sensitive data (e.g., auth tokens) stored in EncryptedSharedPreferences.
+- Firebase rules enforce read/write access only to authenticated users.
+- Regular dependency audits with `./gradlew dependencyCheck`.
+
+---
+
+## Performance Optimization
+
+- Uses `Flow`/`LiveData` to observe DB changes efficiently.
+- Paging library for large exercise lists.
+- Image placeholders & thumbnails to reduce full-size downloads.
+- ProGuard/R8 rules enabled for release builds to shrink & obfuscate code.
+
+---
 
 
