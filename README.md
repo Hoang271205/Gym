@@ -454,5 +454,35 @@ To add a new language:
 - ProGuard/R8 rules enabled for release builds to shrink & obfuscate code.
 
 ---
+## Release Notes & Versioning
+
+We follow [Semantic Versioning](https://semver.org/):
+
+- **MAJOR** version when you make incompatible API changes.
+- **MINOR** version when you add functionality in a backwards-compatible manner.
+- **PATCH** version when you make backwards-compatible bug fixes.
+
+### v1.2.0 (2025-06-01)
+- Added social sharing of workout stats
+- Improved dark mode contrast
+- Fixed crash on habit tracker screen
+
+### v1.1.0 (2025-04-10)
+- Introduced progress analytics charts
+- Refactored networking layer to use Moshi
+- Added Spanish localization
+
+### v1.0.0 (2025-01-15)
+- Initial release with core workout planning & tracking
+
+---
+
+## Known Issues
+
+- Occasionally, sync may delay up to 10 seconds on slow connections.
+- Wear OS integration (beta) may crash on some emulator images.
+- Export to CSV currently exports only current week’s data.
+
+---
 
 
