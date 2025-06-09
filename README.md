@@ -268,5 +268,100 @@ fun scheduleDailyWorkoutReminder(context: Context, hour: Int, minute: Int) {
 ```
 
 ---
+## Work with APIs
+
+1. **Base URL**
+   - Defined in `NetworkModule.kt` as `https://api.yourgymapp.com/`
+2. **Timeouts**
+   - 30 seconds for connect/read/write via OkHttp client
+3. **Serialization**
+   - Moshi converter for JSON
+
+```kotlin
+fun provideRetrofit(okHttpClient: OkHttpClient): Retrofit =
+  Retrofit.Builder()
+    .baseUrl(BASE_URL)
+    .addConverterFactory(MoshiConverterFactory.create())
+    .client(okHttpClient)
+    .build()
+```
+
+---
+
+## Testing
+
+- **Unit Tests**
+   - JUnit5 + Mockito for ViewModels & Repositories
+- **Instrumentation Tests**
+   - Espresso for UI flows
+- **Sample Unit Test**
+
+```kotlin
+@Test
+fun `viewModel emits workouts from repository`() = runBlockingTest {
+  val fakeList = listOf(Workout("1", "Leg Day"))
+  whenever(repository.getAllWorkouts()).thenReturn(flowOf(fakeList))
+
+  val viewModel = WorkoutViewModel(repository)
+  val emitted = viewModel.workouts.first()
+
+  assertEquals(fakeList, emitted)
+}
+```
+
+---
+
+## Contributing
+
+Contributions are welcome! Please follow these steps:
+
+1. Fork the project
+2. Create your feature branch (`git checkout -b feature/AmazingFeature`)
+3. Commit your changes (`git commit -m 'Add some AmazingFeature'`)
+4. Push to the branch (`git push origin feature/AmazingFeature`)
+5. Open a Pull Request
+
+Please read [CONTRIBUTING.md](CONTRIBUTING.md) for details on coding standards and the process.
+
+---
+
+## Roadmap
+
+- [x] Basic workout logging
+- [x] Firebase Authentication
+- [ ] Social sharing
+- [ ] In-app purchase for premium content
+- [ ] Wear OS integration
+- [ ] Real-time chat with personal trainers
+
+---
+
+## License
+
+Distributed under the MIT License. See `LICENSE` for more information.
+
+---
+
+## Contact
+
+Your Name – hoang271205@gmail.com  
+Project Link: [https://github.com/Hoang271205/Gym](https://github.com/Hoang271205/Gym)
+
+## FAQ
+
+### Q1: How do I reset my password?
+If you’ve forgotten your password, open the app and tap “Forgot Password?” on the login screen. Enter the email associated with your account, and you’ll receive a reset link. Follow the instructions in the email to set a new password.
+
+### Q2: Can I use the app offline?
+Yes. The Room database caches your workout plans and exercise library locally. Any changes made offline will synchronize automatically when an internet connection is restored.
+
+### Q3: How do I switch between light and dark mode?
+Go to **Profile → Settings → Appearance**. You can choose **Light**, **Dark**, or **System Default**. The theme will apply immediately across the app.
+
+### Q4: How can I contact support?
+For general inquiries or feedback, email us at support@yourgymapp.com. For bug reports, please open an issue on GitHub:  
+https://github.com/Hoang271205/Gym/issues
+
+---
 
 
