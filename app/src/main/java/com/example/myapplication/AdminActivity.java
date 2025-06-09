@@ -20,9 +20,9 @@ import java.util.TimeZone;
 
 public class AdminActivity extends AppCompatActivity {
 
-    private TextView tvUserCount, tvCurrentDate, tvLoginTime;
+    private TextView tvUserCount, tvWorkoutCount, tvCurrentDate, tvLoginTime;
     private ListView lvUsers;
-    private Button btnLogout, btnRefresh;
+    private Button btnLogout, btnRefresh, btnManageWorkouts, btnViewStats;
     private DatabaseHelper databaseHelper;
     private List<User> userList;
     private ArrayAdapter<String> adapter;
@@ -38,20 +38,24 @@ public class AdminActivity extends AppCompatActivity {
         setupClickListeners();
         setupBackPressedHandler();
         loadUserData();
+        loadWorkoutCount(); // THÊM MỚI
         updateDateTime();
     }
 
     private void initViews() {
         tvUserCount = findViewById(R.id.tvUserCount);
+        tvWorkoutCount = findViewById(R.id.tvWorkoutCount); // THÊM MỚI
         tvCurrentDate = findViewById(R.id.tvCurrentDate);
         tvLoginTime = findViewById(R.id.tvLoginTime);
         lvUsers = findViewById(R.id.lvUsers);
         btnLogout = findViewById(R.id.btnLogout);
         btnRefresh = findViewById(R.id.btnRefresh);
+        btnManageWorkouts = findViewById(R.id.btnManageWorkouts); // THÊM MỚI
+        btnViewStats = findViewById(R.id.btnViewStats); // THÊM MỚI
     }
 
     private void setupClickListeners() {
-        // Nút đăng xuất
+        // Nút đăng xuất (giữ nguyên)
         btnLogout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -59,18 +63,60 @@ public class AdminActivity extends AppCompatActivity {
             }
         });
 
-        // Nút refresh
+        // Nút refresh (cập nhật để load cả workout count)
         btnRefresh.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 loadUserData();
+                loadWorkoutCount(); // THÊM MỚI
                 updateDateTime();
                 Toast.makeText(AdminActivity.this, "Data refreshed!", Toast.LENGTH_SHORT).show();
             }
         });
+
+        // THÊM MỚI: Nút quản lý workouts
+        btnManageWorkouts.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(AdminActivity.this, AdminWorkoutActivity.class);
+                startActivity(intent);
+            }
+        });
+
+        // THÊM MỚI: Nút xem thống kê
+        btnViewStats.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                showStatsDialog();
+            }
+        });
     }
 
-    // Sử dụng OnBackPressedDispatcher thay vì override onBackPressed()
+    // THÊM MỚI: Load workout count
+    private void loadWorkoutCount() {
+        int workoutCount = databaseHelper.getWorkoutCount();
+        tvWorkoutCount.setText(String.valueOf(workoutCount));
+    }
+
+    // THÊM MỚI: Hiển thị thống kê chi tiết
+    private void showStatsDialog() {
+        int userCount = databaseHelper.getUserCount();
+        int workoutCount = databaseHelper.getWorkoutCount();
+
+        String statsMessage = "📊 System Statistics:\n\n" +
+                "👥 Total Users: " + userCount + "\n" +
+                "🏋️ Total Workouts: " + workoutCount + "\n" +
+                "📅 Current Date: " + tvCurrentDate.getText() + "\n" +
+                "⏰ Current Time: " + tvLoginTime.getText();
+
+        new AlertDialog.Builder(this)
+                .setTitle("System Statistics")
+                .setMessage(statsMessage)
+                .setPositiveButton("OK", (dialog, which) -> dialog.dismiss())
+                .show();
+    }
+
+    // Sử dụng OnBackPressedDispatcher thay vì override onBackPressed() (giữ nguyên)
     private void setupBackPressedHandler() {
         OnBackPressedCallback callback = new OnBackPressedCallback(true) {
             @Override
@@ -154,6 +200,7 @@ public class AdminActivity extends AppCompatActivity {
         super.onResume();
         // Refresh data khi quay lại activity
         loadUserData();
+        loadWorkoutCount(); // THÊM MỚI
         updateDateTime();
     }
 

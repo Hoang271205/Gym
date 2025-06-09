@@ -1,5 +1,6 @@
 package com.example.myapplication;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.content.Context;
@@ -24,8 +25,6 @@ public class WorkoutCardAdapter extends RecyclerView.Adapter<WorkoutCardAdapter.
         this.workoutList = workoutList;
     }
 
-
-
     @NonNull
     @Override
     public WorkoutViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
@@ -40,9 +39,30 @@ public class WorkoutCardAdapter extends RecyclerView.Adapter<WorkoutCardAdapter.
         holder.details.setText(workoutcard.getDetails());
         holder.calories.setText(String.valueOf(workoutcard.getCalories()));
         holder.image.setImageBitmap(workoutcard.getImage());
+
+        // ✅ FIX: Truyền đầy đủ workout data thay vì chỉ tạo intent đơn giản
         holder.itemView.setOnClickListener(v -> {
             Context context = v.getContext();
-            Intent intent = new Intent(context, workoutcard.getActivity());
+            Intent intent = new Intent(context, UniversalWorkoutDetailsActivity.class);
+
+
+
+            // ✅ DEBUG: In ra workout ID trước khi truyền
+            Log.d("WorkoutCardAdapter", "🚀 Opening workout ID: " + workoutcard.getId());
+            Log.d("WorkoutCardAdapter", "🚀 Workout title: " + workoutcard.getTitle());
+
+            // Truyền tất cả workout data
+            intent.putExtra("workout_id", workoutcard.getId());
+            intent.putExtra("workout_title", workoutcard.getTitle());
+            intent.putExtra("workout_details", workoutcard.getDetails());
+            intent.putExtra("workout_calories", workoutcard.getCalories());
+            intent.putExtra("workout_type", workoutcard.getType());
+            intent.putExtra("workout_duration", workoutcard.getDuration());
+            intent.putExtra("workout_level", workoutcard.getLevel());
+            intent.putExtra("workout_description", workoutcard.getDescription());
+            intent.putExtra("workout_image_name", workoutcard.getImageName());
+            intent.putExtra("workout_activity_class", "UniversalWorkoutDetailsActivity");
+
             context.startActivity(intent);
         });
     }
@@ -64,10 +84,8 @@ public class WorkoutCardAdapter extends RecyclerView.Adapter<WorkoutCardAdapter.
                 }
             }
         }
-      notifyDataSetChanged();
+        notifyDataSetChanged();
     }
-
-
 
     static class WorkoutViewHolder extends RecyclerView.ViewHolder{
         TextView title,details,calories,activity;
@@ -80,6 +98,4 @@ public class WorkoutCardAdapter extends RecyclerView.Adapter<WorkoutCardAdapter.
             image = itemView.findViewById(R.id.tvImagecard);
         }
     }
-
-
 }

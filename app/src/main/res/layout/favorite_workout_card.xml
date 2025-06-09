@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="200dp"
+    android:layout_margin="8dp"
+    app:cardBackgroundColor="#1E1E2E"
+    app:cardCornerRadius="12dp"
+    app:cardElevation="4dp">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:padding="12dp">
+
+        <!-- Remove Button -->
+        <ImageView
+            android:id="@+id/btnRemoveFavorite"
+            android:layout_width="28dp"
+            android:layout_height="28dp"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentEnd="true"
+            android:src="@drawable/ic_favorite"
+            app:tint="#FF6B35"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:padding="4dp"/>
+
+        <!-- Workout Image -->
+        <ImageView
+            android:id="@+id/tvImagecard"
+            android:layout_width="60dp"
+            android:layout_height="60dp"
+            android:layout_below="@id/btnRemoveFavorite"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="8dp"
+            android:scaleType="centerCrop"/>
+
+        <!-- Workout Title -->
+        <TextView
+            android:id="@+id/tvWorkoutTitle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/tvImagecard"
+            android:layout_marginTop="8dp"
+            android:gravity="center"
+            android:text="Push-ups"
+            android:textColor="#FFFFFF"
+            android:textSize="16sp"
+            android:textStyle="bold"/>
+
+        <!-- Workout Details -->
+        <TextView
+            android:id="@+id/tvWorkoutDetails"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/tvWorkoutTitle"
+            android:layout_marginTop="4dp"
+            android:gravity="center"
+            android:text="3 sets x 15 reps"
+            android:textColor="#AAAAAA"
+            android:textSize="12sp"/>
+
+        <!-- Calories -->
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_centerHorizontal="true"
+            android:layout_marginBottom="4dp"
+            android:gravity="center_vertical"
+            android:orientation="horizontal">
+
+            <ImageView
+                android:layout_width="16dp"
+                android:layout_height="16dp"
+                android:src="@drawable/ic_fire"
+                app:tint="#FF6B35"/>
+
+            <TextView
+                android:id="@+id/tvWorkoutCalories"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="4dp"
+                android:text="50"
+                android:textColor="#FF6B35"
+                android:textSize="14sp"
+                android:textStyle="bold"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="2dp"
+                android:text="kcal"
+                android:textColor="#FF6B35"
+                android:textSize="12sp"/>
+        </LinearLayout>
+    </RelativeLayout>
+</androidx.cardview.widget.CardView>

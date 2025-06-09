@@ -19,80 +19,173 @@
             android:background="#00001C"
             android:paddingBottom="80dp">
 
-            <!-- Profile Avatar -->
-            <ImageView
-                android:id="@+id/imgAvatar"
-                android:layout_width="56dp"
-                android:layout_height="56dp"
-                android:scaleType="centerCrop"
-                android:src="@drawable/ic_profile"
-                app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                android:layout_marginTop="48dp"
-                android:layout_marginEnd="24dp"/>
-
-            <!-- Welcome & Name -->
+            <!-- Header -->
             <LinearLayout
-                android:id="@+id/llWelcome"
-                android:orientation="vertical"
-                android:layout_width="wrap_content"
+                android:id="@+id/llHeader"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="center_vertical"
                 app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                android:layout_marginTop="48dp"
                 android:layout_marginStart="24dp"
-                android:layout_marginTop="48dp">
+                android:layout_marginEnd="24dp">
 
+                <!-- Back Button -->
+                <ImageView
+                    android:id="@+id/btnBack"
+                    android:layout_width="32dp"
+                    android:layout_height="32dp"
+                    android:src="@drawable/ic_back"
+                    android:background="?attr/selectableItemBackgroundBorderless"
+                    android:padding="4dp"/>
+
+                <!-- Title -->
                 <TextView
-                    android:id="@+id/tvWelcome"
-                    android:layout_width="wrap_content"
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
                     android:layout_height="wrap_content"
-                    android:text="welcome to the gym"
-                    android:textColor="#AAA"
-                    android:textSize="16sp"
-                    android:layout_marginBottom="4dp"/>
+                    android:text="My Favorites"
+                    android:textColor="#FFF"
+                    android:textSize="24sp"
+                    android:textStyle="bold"
+                    android:gravity="center"
+                    android:layout_marginStart="16dp"
+                    android:layout_marginEnd="48dp"/>
+            </LinearLayout>
 
+            <!-- Favorite Stats -->
+            <LinearLayout
+                android:id="@+id/llFavoriteStats"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:background="#1E1E2E"
+                android:padding="20dp"
+                android:layout_marginStart="24dp"
+                android:layout_marginEnd="24dp"
+                android:layout_marginTop="24dp"
+                app:layout_constraintTop_toBottomOf="@id/llHeader"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent">
+
+                <!-- Total Favorites -->
                 <LinearLayout
-                    android:layout_width="wrap_content"
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
                     android:layout_height="wrap_content"
-                    android:orientation="horizontal"
-                    android:gravity="center_vertical">
-
-                    <TextView
-                        android:id="@+id/tvName"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Nguyen Tri"
-                        android:textColor="#FFF"
-                        android:textSize="28sp"
-                        android:textStyle="bold"
-                        android:fontFamily="sans-serif"/>
+                    android:orientation="vertical"
+                    android:gravity="center">
 
                     <ImageView
-                        android:id="@+id/icDumbbell"
-                        android:layout_width="28dp"
-                        android:layout_height="28dp"
+                        android:layout_width="32dp"
+                        android:layout_height="32dp"
+                        android:src="@drawable/ic_favorite"
+                        app:tint="#FF6B35"
+                        android:layout_marginBottom="8dp"/>
+
+                    <TextView
+                        android:id="@+id/tvTotalFavorites"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="0"
+                        android:textColor="#FFF"
+                        android:textSize="20sp"
+                        android:textStyle="bold"
+                        android:layout_marginBottom="4dp"/>
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Total Favorites"
+                        android:textColor="#AAA"
+                        android:textSize="12sp"/>
+                </LinearLayout>
+
+                <!-- Total Calories -->
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:gravity="center">
+
+                    <ImageView
+                        android:layout_width="32dp"
+                        android:layout_height="32dp"
+                        android:src="@drawable/ic_fire"
+                        app:tint="#FFD700"
+                        android:layout_marginBottom="8dp"/>
+
+                    <TextView
+                        android:id="@+id/tvTotalCalories"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="0"
+                        android:textColor="#FFF"
+                        android:textSize="20sp"
+                        android:textStyle="bold"
+                        android:layout_marginBottom="4dp"/>
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Total Calories"
+                        android:textColor="#AAA"
+                        android:textSize="12sp"/>
+                </LinearLayout>
+
+                <!-- Workout Types -->
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:gravity="center">
+
+                    <ImageView
+                        android:layout_width="32dp"
+                        android:layout_height="32dp"
                         android:src="@drawable/ic_dumbbell"
-                        android:layout_marginStart="12dp"
-                        app:tint="#FFF" />
+                        app:tint="#4CAF50"
+                        android:layout_marginBottom="8dp"/>
+
+                    <TextView
+                        android:id="@+id/tvWorkoutTypes"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="0"
+                        android:textColor="#FFF"
+                        android:textSize="20sp"
+                        android:textStyle="bold"
+                        android:layout_marginBottom="4dp"/>
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Workout Types"
+                        android:textColor="#AAA"
+                        android:textSize="12sp"/>
                 </LinearLayout>
             </LinearLayout>
 
-            <!-- Simple, working search bar with exercise title -->
+            <!-- Search Bar -->
             <LinearLayout
                 android:id="@+id/llSearch"
                 android:layout_width="0dp"
                 android:layout_height="56dp"
                 android:layout_marginStart="24dp"
                 android:layout_marginEnd="24dp"
-                android:layout_marginTop="32dp"
+                android:layout_marginTop="24dp"
                 android:background="#1E1E1E"
                 android:gravity="center_vertical"
                 android:orientation="horizontal"
                 android:padding="16dp"
-                android:clipToPadding="false"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/llWelcome">
+                app:layout_constraintTop_toBottomOf="@id/llFavoriteStats">
 
                 <!-- Search Icon -->
                 <ImageView
@@ -110,7 +203,7 @@
                     android:layout_weight="1"
                     android:layout_marginStart="12dp"
                     android:background="@null"
-                    android:hint="Search workout..."
+                    android:hint="Search favorite workouts..."
                     android:imeOptions="actionSearch"
                     android:inputType="text"
                     android:maxLines="1"
@@ -118,178 +211,73 @@
                     android:textColorHint="#888888"
                     android:textSize="16sp"/>
 
-            </LinearLayout>
-
-            <!-- Daily Monitoring label -->
-            <TextView
-                android:id="@+id/tvDailyMonitoring"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Daily Monitoring"
-                android:textColor="#FFF"
-                android:textSize="18sp"
-                android:textStyle="bold"
-                app:layout_constraintTop_toBottomOf="@id/llSearch"
-                app:layout_constraintStart_toStartOf="parent"
-                android:layout_marginTop="32dp"
-                android:layout_marginStart="24dp"/>
-
-            <!-- Daily Monitoring Stats -->
-            <LinearLayout
-                android:id="@+id/llStats"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                app:layout_constraintTop_toBottomOf="@id/tvDailyMonitoring"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                android:layout_marginTop="16dp"
-                android:layout_marginStart="24dp"
-                android:layout_marginEnd="24dp">
-
-                <!-- Calories -->
-                <LinearLayout
-                    android:layout_width="0dp"
-                    android:layout_weight="1"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical"
-                    android:gravity="center_horizontal">
-
-                    <ImageView
-                        android:layout_width="40dp"
-                        android:layout_height="40dp"
-                        android:src="@drawable/ic_fire"
-                        app:tint="#FF6B35"
-                        android:layout_marginBottom="8dp"/>
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="2550"
-                        android:textColor="#FFF"
-                        android:textSize="22sp"
-                        android:textStyle="bold"
-                        android:layout_marginBottom="4dp"/>
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Daily Calories"
-                        android:textColor="#AAA"
-                        android:textSize="12sp"/>
-                </LinearLayout>
-
-                <!-- Sleep -->
-                <LinearLayout
-                    android:layout_width="0dp"
-                    android:layout_weight="1"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical"
-                    android:gravity="center_horizontal">
-
-                    <ImageView
-                        android:layout_width="40dp"
-                        android:layout_height="40dp"
-                        android:src="@drawable/ic_banana"
-                        app:tint="#FFD700"
-                        android:layout_marginBottom="8dp"/>
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="6h 45min"
-                        android:textColor="#FFF"
-                        android:textSize="22sp"
-                        android:textStyle="bold"
-                        android:layout_marginBottom="4dp"/>
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Daily Sleep"
-                        android:textColor="#AAA"
-                        android:textSize="12sp"/>
-                </LinearLayout>
-
-                <!-- Workout -->
-                <LinearLayout
-                    android:layout_width="0dp"
-                    android:layout_weight="1"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical"
-                    android:gravity="center_horizontal">
-
-                    <ImageView
-                        android:layout_width="40dp"
-                        android:layout_height="40dp"
-                        android:src="@drawable/ic_clock"
-                        app:tint="#FFF"
-                        android:layout_marginBottom="8dp"/>
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="2w 4days"
-                        android:textColor="#FFF"
-                        android:textSize="22sp"
-                        android:textStyle="bold"
-                        android:layout_marginBottom="4dp"/>
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Total workout"
-                        android:textColor="#AAA"
-                        android:textSize="12sp"/>
-                </LinearLayout>
-            </LinearLayout>
-
-            <!-- Featured Workout -->
-            <FrameLayout
-                android:id="@+id/flFeatured"
-                android:layout_width="0dp"
-                android:layout_height="180dp"
-                app:layout_constraintTop_toBottomOf="@id/llStats"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                android:layout_marginTop="12dp"
-                android:layout_marginStart="24dp"
-                android:layout_marginEnd="12dp">
-
-                <include layout="@layout/featured_card"/>
-
-            </FrameLayout>
-
-            <!-- Other Workout header -->
-            <LinearLayout
-                android:id="@+id/llOtherHeader"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:gravity="center_vertical"
-                app:layout_constraintTop_toBottomOf="@id/flFeatured"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                android:layout_marginTop="24dp"
-                android:layout_marginStart="24dp"
-                android:layout_marginEnd="24dp">
-
+                <!-- Clear All Button -->
                 <TextView
-                    android:layout_width="0dp"
-                    android:layout_weight="1"
-                    android:layout_height="wrap_content"
-                    android:text="Other Workout"
-                    android:textColor="#FFF"
-                    android:textSize="18sp"
-                    android:textStyle="bold"/>
-
-                <TextView
-                    android:id="@+id/tvSeeAll"
+                    android:id="@+id/btnClearAll"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="See all"
+                    android:text="Clear All"
                     android:textColor="#FF6B35"
                     android:textSize="14sp"
-                    android:textStyle="bold"/>
+                    android:textStyle="bold"
+                    android:padding="8dp"
+                    android:background="?attr/selectableItemBackground"/>
             </LinearLayout>
 
-            <!-- RecyclerView -->
+            <!-- Empty State -->
+            <LinearLayout
+                android:id="@+id/llEmptyState"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:gravity="center"
+                android:visibility="gone"
+                app:layout_constraintTop_toBottomOf="@id/llSearch"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                android:layout_marginTop="80dp"
+                android:layout_marginStart="24dp"
+                android:layout_marginEnd="24dp">
+
+                <ImageView
+                    android:layout_width="120dp"
+                    android:layout_height="120dp"
+                    android:src="@drawable/ic_favorite"
+                    app:tint="#444"
+                    android:layout_marginBottom="24dp"/>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="No Favorite Workouts Yet"
+                    android:textColor="#FFF"
+                    android:textSize="20sp"
+                    android:textStyle="bold"
+                    android:layout_marginBottom="8dp"/>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Start adding workouts to your favorites by tapping the heart icon"
+                    android:textColor="#AAA"
+                    android:textSize="14sp"
+                    android:gravity="center"
+                    android:layout_marginBottom="24dp"/>
+
+                <Button
+                    android:id="@+id/btnBrowseWorkouts"
+                    android:layout_width="wrap_content"
+                    android:layout_height="48dp"
+                    android:text="Browse Workouts"
+                    android:textColor="#FFF"
+                    android:backgroundTint="#FF6B35"
+                    android:paddingStart="24dp"
+                    android:paddingEnd="24dp"/>
+            </LinearLayout>
+
+            <!-- RecyclerView for Favorite Workouts -->
             <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/recyclerViewWorkouts"
+                android:id="@+id/recyclerViewFavorites"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:clipToPadding="false"
@@ -297,13 +285,13 @@
                 android:paddingBottom="16dp"
                 android:layout_marginStart="24dp"
                 android:layout_marginEnd="24dp"
-                app:layout_constraintTop_toBottomOf="@id/llOtherHeader"
+                app:layout_constraintTop_toBottomOf="@id/llSearch"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"/>
         </androidx.constraintlayout.widget.ConstraintLayout>
     </ScrollView>
 
-    <!-- ✅ FIXED: Bottom Navigation với proper IDs -->
+    <!-- Bottom Navigation -->
     <LinearLayout
         android:id="@+id/bottomNav"
         android:layout_width="match_parent"
@@ -314,7 +302,6 @@
         android:elevation="8dp"
         android:layout_alignParentBottom="true">
 
-        <!-- ✅ HOME NAVIGATION -->
         <LinearLayout
             android:id="@+id/navHome"
             android:layout_width="0dp"
@@ -327,17 +314,16 @@
                 android:layout_width="28dp"
                 android:layout_height="28dp"
                 android:src="@drawable/ic_home"
-                app:tint="#FF6B35"
+                app:tint="#888"
                 android:layout_marginBottom="4dp"/>
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Home"
-                android:textColor="#FF6B35"
+                android:textColor="#888"
                 android:textSize="12sp"/>
         </LinearLayout>
 
-        <!-- ✅ FAVORITE NAVIGATION -->
         <LinearLayout
             android:id="@+id/navFavorite"
             android:layout_width="0dp"
@@ -350,17 +336,16 @@
                 android:layout_width="28dp"
                 android:layout_height="28dp"
                 android:src="@drawable/ic_favorite"
-                app:tint="#888"
+                app:tint="#FF6B35"
                 android:layout_marginBottom="4dp"/>
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Favorite"
-                android:textColor="#888"
+                android:textColor="#FF6B35"
                 android:textSize="12sp"/>
         </LinearLayout>
 
-        <!-- ✅ PROFILE NAVIGATION -->
         <LinearLayout
             android:id="@+id/navProfile"
             android:layout_width="0dp"
@@ -370,7 +355,6 @@
             android:gravity="center"
             android:background="?attr/selectableItemBackground">
             <ImageView
-                android:id="@+id/profile_image"
                 android:layout_width="28dp"
                 android:layout_height="28dp"
                 android:src="@drawable/ic_profile"

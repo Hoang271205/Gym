@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <item name="lvWorkouts" type="id" />
+    <item name="btnAddWorkout" type="id" />
+    <item name="etInstructionTitle" type="id" />
+    <item name="etInstructionDesc" type="id" />
+    <item name="etInstructionImage" type="id" />
+    <item name="etInstructionDuration" type="id" />
+    <item name="tvStepNumber" type="id" />
+    <item name="tvImageName" type="id" />
+    <item name="btnRemove" type="id" />
+</resources>

@@ -38,16 +38,28 @@
             android:name=".MainActivity"
             android:theme="@style/Theme.MyApplication" />
 
+        <!-- ✅ NEW: Favorite Activity -->
+        <activity
+            android:name=".FavoriteActivity"
+            android:theme="@style/Theme.MyApplication"
+            android:label="My Favorites"
+            android:parentActivityName=".MainActivity"
+            android:exported="false" />
+
+        <!-- Workout detail activities -->
+        <activity
+            android:name=".UniversalWorkoutDetailsActivity"
+            android:theme="@style/Theme.MyApplication"
+            android:label="Workout Details"
+            android:parentActivityName=".MainActivity"
+            android:exported="false" />
+
         <activity
             android:name=".PushupDetailsActivity"
             android:parentActivityName=".MainActivity" />
 
         <activity
             android:name=".TwistDetailsActivity"
-            android:parentActivityName=".MainActivity" />
-
-        <activity
-            android:name=".WorkoutListActivity"
             android:parentActivityName=".MainActivity" />
 
         <activity
@@ -58,8 +70,19 @@
             android:name=".PlankDetailsActivity"
             android:parentActivityName=".MainActivity" />
 
+        <!-- Other activities -->
+        <activity
+            android:name=".WorkoutListActivity"
+            android:parentActivityName=".MainActivity" />
+
         <activity android:name=".ProfileActivity" />
-        <activity android:name=".StartWorkoutActivity"/>
+
+        <activity
+            android:name=".StartWorkoutActivity"
+            android:theme="@style/Theme.MyApplication"
+            android:label="Start Workout"
+            android:parentActivityName=".UniversalWorkoutDetailsActivity"
+            android:exported="false" />
 
         <!-- Admin system activities -->
         <activity
@@ -68,8 +91,20 @@
             android:label="Admin Panel"
             android:parentActivityName=".Login" />
 
+        <!-- Admin Workout Management Activities -->
+        <activity
+            android:name=".AdminWorkoutActivity"
+            android:theme="@style/Theme.MyApplication"
+            android:label="Workout Management"
+            android:parentActivityName=".AdminActivity"
+            android:exported="false" />
 
-
+        <activity
+            android:name=".AddWorkoutActivity"
+            android:theme="@style/Theme.MyApplication"
+            android:label="Add New Workout"
+            android:parentActivityName=".AdminWorkoutActivity"
+            android:exported="false" />
 
     </application>
 

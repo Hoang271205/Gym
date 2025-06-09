@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:background="#1E1E2E"
+    android:padding="20dp">
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Step Title *"
+        android:textColor="#FFFFFF"
+        android:textSize="14sp"
+        android:layout_marginBottom="8dp" />
+
+    <EditText
+        android:id="@+id/etInstructionTitle"
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:background="#2A2A3A"
+        android:textColor="#FFFFFF"
+        android:textColorHint="#AAAAAA"
+        android:hint="e.g., STANDARD PUSH-UP"
+        android:padding="10dp"
+        android:layout_marginBottom="16dp" />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Description *"
+        android:textColor="#FFFFFF"
+        android:textSize="14sp"
+        android:layout_marginBottom="8dp" />
+
+    <EditText
+        android:id="@+id/etInstructionDesc"
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:background="#2A2A3A"
+        android:textColor="#FFFFFF"
+        android:textColorHint="#AAAAAA"
+        android:hint="e.g., Classic, entire upper body"
+        android:gravity="top"
+        android:padding="10dp"
+        android:layout_marginBottom="16dp" />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Image Name (optional)"
+        android:textColor="#FFFFFF"
+        android:textSize="14sp"
+        android:layout_marginBottom="8dp" />
+
+    <EditText
+        android:id="@+id/etInstructionImage"
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:background="#2A2A3A"
+        android:textColor="#FFFFFF"
+        android:textColorHint="#AAAAAA"
+        android:hint="e.g., standard_pushup"
+        android:padding="10dp"
+        android:layout_marginBottom="16dp" />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Duration (seconds, optional)"
+        android:textColor="#FFFFFF"
+        android:textSize="14sp"
+        android:layout_marginBottom="8dp" />
+
+    <EditText
+        android:id="@+id/etInstructionDuration"
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:background="#2A2A3A"
+        android:textColor="#FFFFFF"
+        android:textColorHint="#AAAAAA"
+        android:hint="e.g., 30"
+        android:inputType="number"
+        android:padding="10dp"
+        android:layout_marginBottom="20dp" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <Button
+            android:id="@+id/btnCancel"
+            android:layout_width="0dp"
+            android:layout_height="40dp"
+            android:layout_weight="1"
+            android:text="Cancel"
+            android:textColor="#FFFFFF"
+            android:backgroundTint="#6C757D"
+            android:layout_marginEnd="8dp" />
+
+        <Button
+            android:id="@+id/btnSave"
+            android:layout_width="0dp"
+            android:layout_height="40dp"
+            android:layout_weight="1"
+            android:text="Add Step"
+            android:textColor="#FFFFFF"
+            android:backgroundTint="#FF6600"
+            android:layout_marginStart="8dp" />
+
+    </LinearLayout>
+
+</LinearLayout>
