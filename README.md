@@ -484,5 +484,22 @@ We follow [Semantic Versioning](https://semver.org/):
 - Export to CSV currently exports only current week’s data.
 
 ---
+## Contributing & Code of Conduct
+
+Please read our [CONTRIBUTING.md](CONTRIBUTING.md) and [CODE_OF_CONDUCT.md](CODE_OF_CONDUCT.md) before submitting contributions. We adhere to a Contributor Covenant to maintain a welcoming community.
+
+---
+
+## Acknowledgements
+
+- [Jetpack Compose](https://developer.android.com/jetpack/compose) team for UI frameworks
+- [Firebase](https://firebase.google.com/) for backend services
+- [Glide](https://github.com/bumptech/glide) for image loading
+- [MPAndroidChart](https://github.com/PhilJay/MPAndroidChart) for data visualization
+
+---
+
+Thank you for using Gym App! Happy training! 🚀
+
 
 
