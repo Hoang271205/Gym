@@ -25,3 +25,14 @@
 15. [Roadmap](#roadmap)
 16. [License](#license)
 17. [Contact](#contact)  
+
+
+## About the Project
+
+Gym App is designed to be your personal workout companion. Whether you’re a beginner or an advanced athlete, it provides:
+
+- Customized workout plans
+- Detailed exercise database with instructions
+- Progress tracking & analytics
+- Notifications for scheduled workouts
+- Integration with Firebase for user authentication and cloud sync  
