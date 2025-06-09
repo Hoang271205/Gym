@@ -363,5 +363,63 @@ For general inquiries or feedback, email us at support@yourgymapp.com. For bug r
 https://github.com/Hoang271205/Gym/issues
 
 ---
+## Troubleshooting
+
+1. **Build fails with “Cannot find symbol”**
+   - Ensure you’ve run `./gradlew clean` and that Android Studio has synced all Gradle dependencies.
+   - Verify that `kapt` annotation processing is enabled in `build.gradle` for Hilt and Room.
+
+2. **Missing `google-services.json` error**
+   - Confirm you placed `google-services.json` in the `app/` directory.
+   - Check that your applicationId in `build.gradle` matches the Firebase project.
+
+3. **Crash on startup (NullPointerException)**
+   - Use Android Studio’s Logcat to inspect the stack trace.
+   - Common culprits: uninitialized ViewBinding, missing Manifest entries, or misconfigured Hilt modules.
+
+4. **Slow image loading**
+   - Ensure you’re using the latest Glide dependency.
+   - Consider enabling disk cache: `.diskCacheStrategy(DiskCacheStrategy.ALL)`.
+
+---
+
+## Environment Variables & Configuration
+
+The following values can be customized in `gradle.properties` or via CI/CD secrets:
+
+- `API_BASE_URL`
+- `FIREBASE_API_KEY`
+- `FIREBASE_PROJECT_ID`
+- `FIREBASE_APP_ID`
+- `GOOGLE_CLIENT_ID`
+
+Example (`~/.gradle/gradle.properties`):
+```properties
+API_BASE_URL=https://api.yourgymapp.com/
+FIREBASE_API_KEY=YOUR_FIREBASE_API_KEY
+FIREBASE_PROJECT_ID=your-gym-app
+FIREBASE_APP_ID=1:1234567890:android:abcdef123456
+GOOGLE_CLIENT_ID=1234567890-abcdef.apps.googleusercontent.com
+```
+
+---
+
+## CI/CD Pipeline
+
+Our project uses GitHub Actions to automate builds, tests, and releases.
+
+```
+.github/workflows/android-ci.yml
+  - Checks out code
+  - Sets up JDK 11
+  - Installs Android SDK 30
+  - Runs `./gradlew lint assembleDebug`
+  - Executes unit & instrumentation tests
+  - Uploads artifacts on success
+```
+
+To trigger a release build on a new tag, see `.github/workflows/release.yml`.
+
+---
 
 
