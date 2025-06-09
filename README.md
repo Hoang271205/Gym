@@ -87,3 +87,124 @@ Before you begin, ensure you have met the following requirements:
     - Select a device or emulator and hit **Run**
 
 ---
+## Project Structure
+
+```
+Gym/
+├── app/
+│   ├── src/
+│   │   ├── main/
+│   │   │   ├── java/com/hoang/gymapp/
+│   │   │   │   ├── data/
+│   │   │   │   │   ├── local/       # Room entities & DAOs
+│   │   │   │   │   ├── remote/      # Retrofit services
+│   │   │   │   │   └── repository/  # Repositories
+│   │   │   │   ├── di/              # Hilt modules
+│   │   │   │   ├── ui/
+│   │   │   │   │   ├── main/        # MainActivity & ViewModels
+│   │   │   │   │   ├── workout/     # Workout screens
+│   │   │   │   │   └── profile/     # Profile screens
+│   │   │   │   └── utils/           # Utility classes
+│   │   │   ├── res/
+│   │   │   │   ├── layout/          # XML layouts
+│   │   │   │   ├── drawable/        # Icons & images
+│   │   │   │   ├── values/          # colors, strings, styles
+│   │   │   └── AndroidManifest.xml
+│   │   └── test/                    # Unit tests
+│   └── build.gradle
+├── build.gradle
+├── settings.gradle
+└── README.md
+```
+
+---
+
+## Architecture Overview
+
+We follow the MVVM (Model-View-ViewModel) pattern:
+
+1. **Model**
+    - Data classes representing domain objects (e.g., `Workout`, `Exercise`, `UserProfile`)
+    - Entities for Room persistence
+2. **View**
+    - XML layouts & Jetpack Compose (where applicable)
+    - Activities & Fragments observing LiveData/StateFlow
+3. **ViewModel**
+    - Provides data to UI
+    - Handles business logic and transforms repository data
+4. **Repository**
+    - Mediates between data sources (local DB, remote API)
+    - Exposes a clean API to ViewModels
+
+Dependency injection (Hilt) is used to provide singletons for Database, Retrofit, and other utilities.
+
+---
+
+## Screens & Navigation
+
+| Screen Name        | Description                                            |
+| ------------------ | ------------------------------------------------------ |
+| **Login**          | User authentication (Email/Google)                     |
+| **Sign Up**        | Register new account                                   |
+| **Home**           | Overview of upcoming workouts & stats                  |
+| **Workout Plan**   | Browse or create custom workout routines               |
+| **Exercise Detail**| Instructions, animations, muscle group highlights      |
+| **Progress**       | Charts and logs of past workouts                       |
+| **Profile**        | User settings, preferences, and account management      |
+
+Navigation is handled by the AndroidX Navigation Component with a single-Activity pattern.
+
+---
+
+## Sample Code Snippets
+
+### ViewModel Example (Kotlin)
+
+```kotlin
+@HiltViewModel
+class WorkoutViewModel @Inject constructor(
+    private val repository: WorkoutRepository
+) : ViewModel() {
+
+    private val _workouts = MutableStateFlow<List<Workout>>(emptyList())
+    val workouts: StateFlow<List<Workout>> = _workouts
+
+    init {
+        viewModelScope.launch {
+            repository.getAllWorkouts().collect {
+                _workouts.value = it
+            }
+        }
+    }
+}
+```
+
+### Retrofit Service Interface
+
+```kotlin
+interface GymApiService {
+  @GET("exercises")
+  suspend fun fetchExercises(): List<ExerciseDto>
+
+  @POST("users/{id}/workouts")
+  suspend fun uploadWorkout(
+    @Path("id") userId: String,
+    @Body workout: WorkoutDto
+  ): Response<Void>
+}
+```
+
+### Room DAO Interface
+
+```kotlin
+@Dao
+interface ExerciseDao {
+  @Query("SELECT * FROM exercise_table WHERE muscleGroup = :group")
+  fun getByMuscle(group: String): Flow<List<ExerciseEntity>>
+
+  @Insert(onConflict = OnConflictStrategy.REPLACE)
+  suspend fun insertAll(exercises: List<ExerciseEntity>)
+}
+```
+
+---
