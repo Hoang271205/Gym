@@ -1,6 +1,8 @@
 package com.example.myapplication;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.content.Context;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -10,6 +12,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import java.util.List;
@@ -26,8 +29,8 @@ public class UniversalWorkoutDetailsActivity extends AppCompatActivity {
     private Workout currentWorkout;
     private ExerciseInstructionAdapter instructionAdapter;
 
-    // ✅ NEW: Favorite functionality
-    private String currentUserId = "user123"; // TODO: Get from session/preferences/login
+    // ✅ UPDATED: Better user ID management
+    private String currentUserId;
     private boolean isFavorite = false;
 
     @Override
@@ -38,8 +41,12 @@ public class UniversalWorkoutDetailsActivity extends AppCompatActivity {
         databaseHelper = new DatabaseHelper(this);
 
         initViews();
+        getCurrentUserId(); // ✅ GET USER ID FIRST
         loadWorkoutData();
         setupClickListeners();
+
+        // ✅ ADD DEBUG TEST
+        testDatabase();
     }
 
     private void initViews() {
@@ -52,6 +59,56 @@ public class UniversalWorkoutDetailsActivity extends AppCompatActivity {
         btnStartWorkout = findViewById(R.id.btnStartWorkout);
         btnFavorite = findViewById(R.id.btnFavorite);
         recyclerViewInstructions = findViewById(R.id.recyclerViewInstructions);
+    }
+
+    // ✅ NEW: Method để lấy current user ID
+    private void getCurrentUserId() {
+        // Cách 1: Từ Intent
+        currentUserId = getIntent().getStringExtra("user_id");
+        Log.d("UniversalWorkout", "📥 Intent user_id: '" + currentUserId + "'");
+
+        // Cách 2: Từ SharedPreferences nếu Intent không có hoặc empty
+        if (currentUserId == null || currentUserId.trim().isEmpty()) {
+            try {
+                currentUserId = DatabaseHelper.getCurrentUserId(this);
+                Log.d("UniversalWorkout", "📱 SharedPrefs user_id: '" + currentUserId + "'");
+            } catch (Exception e) {
+                Log.e("UniversalWorkout", "❌ Error getting user_id from SharedPrefs: " + e.getMessage());
+                currentUserId = "";
+            }
+        }
+
+        // Cách 3: Query database với login name nếu vẫn không có
+        if (currentUserId == null || currentUserId.trim().isEmpty()) {
+            try {
+                // ✅ Get user ID by login name từ database
+                User user = databaseHelper.getUserByEmail("your_email@example.com"); // Replace with actual email
+                if (user != null) {
+                    currentUserId = String.valueOf(user.getId());
+                    Log.d("UniversalWorkout", "🔍 Found user_id from database: '" + currentUserId + "'");
+                }
+            } catch (Exception e) {
+                Log.e("UniversalWorkout", "❌ Error querying user from database: " + e.getMessage());
+            }
+        }
+
+        // Cách 4: Final fallback - use ID=1 từ registration log
+        if (currentUserId == null || currentUserId.trim().isEmpty()) {
+            currentUserId = "1"; // Từ log: "User added with ID: 1"
+            Log.w("UniversalWorkout", "⚠️ Using fallback user_id: " + currentUserId);
+        }
+
+        Log.d("UniversalWorkout", "✅ Final User ID: '" + currentUserId + "'");
+    }
+
+    // ✅ NEW: Test database functionality
+    private void testDatabase() {
+        try {
+            databaseHelper.testFavoritesTable();
+            Log.d("UniversalWorkout", "Database test completed successfully");
+        } catch (Exception e) {
+            Log.e("UniversalWorkout", "Database test failed: " + e.getMessage(), e);
+        }
     }
 
     private void loadWorkoutData() {
@@ -68,26 +125,11 @@ public class UniversalWorkoutDetailsActivity extends AppCompatActivity {
                 }
             }
 
-            // ✅ THÊM ĐOẠN NÀY: Load user info từ intent
-            int userIdInt = intent.getIntExtra("user_id", -1);
-            String username = intent.getStringExtra("username");
-            String email = intent.getStringExtra("email");
-
-            if (userIdInt != -1) {
-                currentUserId = String.valueOf(userIdInt);
-                Log.d("UniversalWorkout", "✅ User ID loaded from intent: " + currentUserId);
-            } else {
-                Log.w("UniversalWorkout", "⚠️ No user_id in intent, using default: " + currentUserId);
-            }
-
-            Log.d("UniversalWorkout", "🔍 Final currentUserId: " + currentUserId);
-            // ✅ KẾT THÚC ĐOẠN THÊM
-
             // ✅ Tạo workout object từ intent extras
             if (intent.hasExtra("workout_id")) {
                 currentWorkout = new Workout();
 
-                // ✅ FIX: THÊM DÒNG NÀY ĐỂ SET ID
+                // ✅ SET ID
                 currentWorkout.setId(intent.getIntExtra("workout_id", 0));
 
                 // Set all fields from intent
@@ -112,14 +154,13 @@ public class UniversalWorkoutDetailsActivity extends AppCompatActivity {
             return;
         }
 
-        // ✅ DEBUG: In ra thông tin workout SAU KHI SET ID
+        // ✅ DEBUG: In ra thông tin workout
         Log.d("UniversalWorkout", "=== WORKOUT LOADED SUCCESSFULLY ===");
-        Log.d("UniversalWorkout", "User ID: " + currentUserId); // ✅ THÊM DÒNG NÀY
+        Log.d("UniversalWorkout", "User ID: '" + currentUserId + "'");
         Log.d("UniversalWorkout", "Workout ID: " + currentWorkout.getId());
         Log.d("UniversalWorkout", "Workout Title: " + currentWorkout.getTitle());
-        Log.d("UniversalWorkout", "Workout Type: " + currentWorkout.getType());
 
-        // ✅ NEW: Kiểm tra favorite status
+        // ✅ Kiểm tra favorite status
         checkFavoriteStatus();
 
         // Display workout info
@@ -127,14 +168,14 @@ public class UniversalWorkoutDetailsActivity extends AppCompatActivity {
         loadExerciseInstructions();
     }
 
-    // ✅ NEW: Kiểm tra trạng thái favorite
+    // ✅ Kiểm tra trạng thái favorite
     private void checkFavoriteStatus() {
         isFavorite = databaseHelper.isFavorite(currentWorkout.getId(), currentUserId);
         updateFavoriteButton();
         Log.d("UniversalWorkout", "🔍 Favorite status: " + isFavorite);
     }
 
-    // ✅ NEW: Cập nhật giao diện favorite button
+    // ✅ Cập nhật giao diện favorite button
     private void updateFavoriteButton() {
         if (isFavorite) {
             btnFavorite.setImageResource(R.drawable.ic_favorite);
@@ -145,35 +186,58 @@ public class UniversalWorkoutDetailsActivity extends AppCompatActivity {
         }
     }
 
-    // ✅ NEW: Toggle favorite functionality
+    // ✅ UPDATED: Toggle favorite với better error handling
     private void toggleFavorite() {
-        if (isFavorite) {
-            // Remove from favorites
-            boolean removed = databaseHelper.removeFromFavorites(currentWorkout.getId(), currentUserId);
-            if (removed) {
-                isFavorite = false;
-                updateFavoriteButton();
-                Toast.makeText(this, "💔 Removed from favorites", Toast.LENGTH_SHORT).show();
-                Log.d("UniversalWorkout", "✅ Removed from favorites: " + currentWorkout.getTitle());
-            } else {
-                Toast.makeText(this, "❌ Failed to remove from favorites", Toast.LENGTH_SHORT).show();
-                Log.e("UniversalWorkout", "❌ Failed to remove from favorites");
-            }
-        } else {
-            // Add to favorites
-            boolean added = databaseHelper.addToFavorites(currentWorkout.getId(), currentUserId);
-            if (added) {
-                isFavorite = true;
-                updateFavoriteButton();
+        Log.d("UniversalWorkout", "=== TOGGLE FAVORITE DEBUG ===");
+        Log.d("UniversalWorkout", "Current User ID: '" + currentUserId + "'");
+        Log.d("UniversalWorkout", "Current Workout ID: " + currentWorkout.getId());
+        Log.d("UniversalWorkout", "Current Favorite Status: " + isFavorite);
+
+        // Validate workout ID
+        if (currentWorkout.getId() == 0) {
+            Log.e("UniversalWorkout", "❌ INVALID WORKOUT ID = 0");
+            Toast.makeText(this, "❌ Invalid workout data", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        // ✅ FIX: Ensure we have valid user_id
+        if (currentUserId == null || currentUserId.trim().isEmpty()) {
+            // Try to get user_id again
+            getCurrentUserId();
+        }
+
+        // ✅ FIX: Accept any non-empty user_id (remove guest restriction)
+        if (currentUserId == null || currentUserId.trim().isEmpty()) {
+            Log.e("UniversalWorkout", "❌ No valid user ID available");
+            Toast.makeText(this, "❌ Please login to use favorites", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        Log.d("UniversalWorkout", "✅ Proceeding with User ID: '" + currentUserId + "'");
+
+        // Toggle favorite
+        boolean success = databaseHelper.toggleFavorite(currentWorkout.getId(), currentUserId);
+
+        if (success) {
+            // Update UI
+            isFavorite = !isFavorite;
+            updateFavoriteButton();
+
+            // Show feedback
+            if (isFavorite) {
                 Toast.makeText(this, "❤️ Added to favorites!", Toast.LENGTH_SHORT).show();
                 Log.d("UniversalWorkout", "✅ Added to favorites: " + currentWorkout.getTitle());
             } else {
-                Toast.makeText(this, "❌ Failed to add to favorites", Toast.LENGTH_SHORT).show();
-                Log.e("UniversalWorkout", "❌ Failed to add to favorites");
+                Toast.makeText(this, "💔 Removed from favorites", Toast.LENGTH_SHORT).show();
+                Log.d("UniversalWorkout", "✅ Removed from favorites: " + currentWorkout.getTitle());
             }
+        } else {
+            Toast.makeText(this, "❌ Failed to update favorites", Toast.LENGTH_SHORT).show();
+            Log.e("UniversalWorkout", "❌ Failed to toggle favorite for user: " + currentUserId);
         }
     }
 
+    // [Giữ nguyên tất cả các method khác...]
     private void displayWorkoutInfo() {
         // Set workout image
         String imageName = currentWorkout.getImageName();
@@ -182,17 +246,16 @@ public class UniversalWorkoutDetailsActivity extends AppCompatActivity {
             if (resourceId != 0) {
                 imgWorkout.setImageResource(resourceId);
             } else {
-                imgWorkout.setImageResource(R.drawable.pushup_card); // Default image
+                imgWorkout.setImageResource(R.drawable.pushup_card);
             }
         } else {
-            imgWorkout.setImageResource(R.drawable.pushup_card); // Default image
+            imgWorkout.setImageResource(R.drawable.pushup_card);
         }
 
         // Set difficulty level
         String level = currentWorkout.getLevel();
         if (level != null) {
             tvDifficulty.setText(level);
-            // Set difficulty color
             switch (level.toLowerCase()) {
                 case "beginner":
                     tvDifficulty.setTextColor(getResources().getColor(android.R.color.holo_green_light));
@@ -232,43 +295,18 @@ public class UniversalWorkoutDetailsActivity extends AppCompatActivity {
 
     private void loadExerciseInstructions() {
         int workoutId = currentWorkout.getId();
-        Log.d("UniversalWorkout", "🔍 DEBUG: Loading instructions for workout ID: " + workoutId);
-        Log.d("UniversalWorkout", "🔍 DEBUG: Workout title: " + currentWorkout.getTitle());
-        Log.d("UniversalWorkout", "🔍 DEBUG: Workout type: " + currentWorkout.getType());
+        Log.d("UniversalWorkout", "🔍 Loading instructions for workout ID: " + workoutId);
 
-        // ✅ THÊM DEBUG: Kiểm tra database trực tiếp
         databaseHelper.debugWorkoutInstructions(workoutId);
 
-        // Load từ database trước
         List<ExerciseInstruction> instructions = databaseHelper.getExerciseInstructions(workoutId);
 
-        Log.d("UniversalWorkout", "📊 Found " + instructions.size() + " custom instructions in database");
-
-        // In chi tiết từng instruction
-        for (int i = 0; i < instructions.size(); i++) {
-            ExerciseInstruction inst = instructions.get(i);
-            Log.d("UniversalWorkout", "✅ Custom Instruction " + (i+1) + ": " + inst.getTitle() + " - " + inst.getDescription());
-        }
-
-        // Nếu không có custom instructions, dùng auto-generated
         if (instructions.isEmpty()) {
             Log.d("UniversalWorkout", "⚠️ No custom instructions found, using auto-generated");
-            Log.d("UniversalWorkout", "🔍 Will use auto-generated for type: '" + currentWorkout.getType() + "' and title: '" + currentWorkout.getTitle() + "'");
-
             instructions = ExerciseDataProvider.getExerciseInstructions(
                     currentWorkout.getType(), currentWorkout.getTitle());
-            Log.d("UniversalWorkout", "📋 Auto-generated " + instructions.size() + " instructions");
-
-            // Debug auto-generated instructions
-            for (int i = 0; i < instructions.size(); i++) {
-                ExerciseInstruction inst = instructions.get(i);
-                Log.d("UniversalWorkout", "🤖 Auto Instruction " + (i+1) + ": " + inst.getTitle());
-            }
-        } else {
-            Log.d("UniversalWorkout", "🎯 Using " + instructions.size() + " custom instructions from database");
         }
 
-        // Setup RecyclerView
         recyclerViewInstructions.setLayoutManager(new LinearLayoutManager(this));
         instructionAdapter = new ExerciseInstructionAdapter(this, instructions);
         recyclerViewInstructions.setAdapter(instructionAdapter);
@@ -280,6 +318,8 @@ public class UniversalWorkoutDetailsActivity extends AppCompatActivity {
         btnStartWorkout.setOnClickListener(v -> {
             Intent intent = new Intent(this, StartWorkoutActivity.class);
 
+            // ✅ TRUYỀN USER ID
+            intent.putExtra("user_id", currentUserId);
             intent.putExtra("workout_id", currentWorkout.getId());
             intent.putExtra("workout_title", currentWorkout.getTitle());
             intent.putExtra("workout_details", currentWorkout.getDetails());
@@ -292,29 +332,15 @@ public class UniversalWorkoutDetailsActivity extends AppCompatActivity {
             startActivity(intent);
         });
 
-        // ✅ NEW: Favorite button với toggle functionality
+        // ✅ Favorite button với toggle functionality
         btnFavorite.setOnClickListener(v -> toggleFavorite());
     }
 
-    // ✅ NEW: Refresh favorite status when returning to this activity
     @Override
     protected void onResume() {
         super.onResume();
         if (currentWorkout != null) {
             checkFavoriteStatus();
         }
-    }
-
-    // ✅ NEW: Method để set user ID từ bên ngoài (nếu cần)
-    public void setCurrentUserId(String userId) {
-        this.currentUserId = userId;
-        if (currentWorkout != null) {
-            checkFavoriteStatus();
-        }
-    }
-
-    // ✅ NEW: Method để get current user ID (cho testing hoặc debugging)
-    public String getCurrentUserId() {
-        return currentUserId;
     }
 }

@@ -10,7 +10,6 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
-import androidx.recyclerview.widget.DiffUtil;
 import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.ArrayList;
@@ -40,16 +39,18 @@ public class WorkoutCardAdapter extends RecyclerView.Adapter<WorkoutCardAdapter.
         holder.calories.setText(String.valueOf(workoutcard.getCalories()));
         holder.image.setImageBitmap(workoutcard.getImage());
 
-        // ✅ FIX: Truyền đầy đủ workout data thay vì chỉ tạo intent đơn giản
+        // ✅ SỬA: Truyền đầy đủ workout data + user_id
         holder.itemView.setOnClickListener(v -> {
             Context context = v.getContext();
             Intent intent = new Intent(context, UniversalWorkoutDetailsActivity.class);
 
+            // ✅ LẤY USER ID từ DatabaseHelper
+            String currentUserId = DatabaseHelper.getCurrentUserId(context);
 
+            Log.d("WorkoutCardAdapter", "🚀 Opening workout ID: " + workoutcard.getId() + " for user: " + currentUserId);
 
-            // ✅ DEBUG: In ra workout ID trước khi truyền
-            Log.d("WorkoutCardAdapter", "🚀 Opening workout ID: " + workoutcard.getId());
-            Log.d("WorkoutCardAdapter", "🚀 Workout title: " + workoutcard.getTitle());
+            // ✅ TRUYỀN USER ID
+            intent.putExtra("user_id", currentUserId);
 
             // Truyền tất cả workout data
             intent.putExtra("workout_id", workoutcard.getId());
