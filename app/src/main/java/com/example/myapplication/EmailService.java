@@ -206,40 +206,40 @@ public class EmailService {
                 // Header
                 "<div style='text-align: center; background: linear-gradient(135deg, #FF7300, #FF5722); color: white; padding: 40px 30px; border-radius: 15px; margin-bottom: 30px;'>" +
                 "<h1 style='margin: 0; font-size: 32px; font-weight: bold;'>🏋️ GYM APP</h1>" +
-                "<p style='margin: 15px 0 0 0; font-size: 18px; opacity: 0.9;'>Đặt Lại Mật Khẩu</p>" +
+                "<p style='margin: 15px 0 0 0; font-size: 18px; opacity: 0.9;'>Password Reset</p>" +
                 "</div>" +
 
                 // Content
                 "<div style='padding: 0 20px;'>" +
-                "<h2 style='color: #333; margin-bottom: 20px; font-size: 24px;'>Xin chào! 👋</h2>" +
+                "<h2 style='color: #333; margin-bottom: 20px; font-size: 24px;'>Hello there! 👋</h2>" +
                 "<p style='font-size: 16px; line-height: 1.8; color: #555; margin-bottom: 30px;'>" +
-                "Chúng tôi đã nhận được yêu cầu đặt lại mật khẩu cho tài khoản Gym App của bạn. " +
-                "Vui lòng sử dụng mã xác thực bên dưới để tiếp tục:</p>" +
+                "We received a request to reset the password for your Gym App account. " +
+                "Please use the verification code below to continue:</p>" +
 
                 // Verification Code Box
                 "<div style='background: linear-gradient(135deg, #f8f9fa, #e9ecef); border: 3px dashed #FF7300; border-radius: 20px; padding: 40px; text-align: center; margin: 40px 0;'>" +
-                "<p style='margin: 0 0 15px 0; font-size: 14px; color: #666; text-transform: uppercase; letter-spacing: 2px; font-weight: bold;'>MÃ XÁC THỰC</p>" +
+                "<p style='margin: 0 0 15px 0; font-size: 14px; color: #666; text-transform: uppercase; letter-spacing: 2px; font-weight: bold;'>VERIFICATION CODE</p>" +
                 "<div style='font-size: 48px; font-weight: bold; color: #FF7300; letter-spacing: 12px; font-family: \"Courier New\", monospace; margin: 20px 0;'>" + verificationCode + "</div>" +
-                "<p style='margin: 15px 0 0 0; font-size: 12px; color: #999; font-style: italic;'>Nhập mã này vào ứng dụng Gym App</p>" +
+                "<p style='margin: 15px 0 0 0; font-size: 12px; color: #999; font-style: italic;'>Enter this code in your Gym App</p>" +
                 "</div>" +
 
                 // Important Notice
                 "<div style='background: #fff3cd; border: 1px solid #ffeaa7; border-left: 5px solid #fdcb6e; border-radius: 10px; padding: 20px; margin: 30px 0;'>" +
-                "<h3 style='margin: 0 0 15px 0; color: #856404; font-size: 16px;'>⚠️ Lưu Ý Quan Trọng</h3>" +
+                "<h3 style='margin: 0 0 15px 0; color: #856404; font-size: 16px;'>⚠️ Important Notice</h3>" +
                 "<ul style='margin: 0; padding-left: 20px; color: #856404; line-height: 1.6;'>" +
-                "<li><strong>Mã này có hiệu lực trong 10 phút</strong></li>" +
-                "<li>Không chia sẻ mã này với bất kỳ ai</li>" +
-                "<li>Nếu bạn không yêu cầu đặt lại mật khẩu, hãy bỏ qua email này</li>" +
-                "<li>Đảm bảo bạn đang truy cập ứng dụng Gym App chính thức</li>" +
+                "<li><strong>This code expires in 10 minutes</strong></li>" +
+                "<li>Do not share this code with anyone</li>" +
+                "<li>If you did not request a password reset, please ignore this email</li>" +
+                "<li>Make sure you are accessing the official Gym App</li>" +
                 "</ul>" +
                 "</div>" +
 
                 // Footer
                 "<div style='text-align: center; margin-top: 40px; padding-top: 30px; border-top: 2px solid #f0f0f0; color: #666;'>" +
-                "<h3 style='margin: 0 0 10px 0; color: #FF7300; font-size: 18px;'>Cảm ơn bạn đã sử dụng Gym App! 🏋️‍♀️</h3>" +
-                "<p style='margin: 5px 0; font-size: 14px;'>Đây là email tự động, vui lòng không phản hồi.</p>" +
-                "<p style='margin: 5px 0; font-size: 12px; color: #999;'>© 2025 Gym App. Developed by Phạm Huy Hoàng</p>" +
-                "<p style='margin: 15px 0 0 0; font-size: 11px; color: #ccc;'>📧 Gửi qua Gmail SMTP: " + new java.util.Date().toString() + "</p>" +
+                "<h3 style='margin: 0 0 10px 0; color: #FF7300; font-size: 18px;'>Thank you for using Gym App! 🏋️‍♀️</h3>" +
+                "<p style='margin: 5px 0; font-size: 14px;'>This is an automated email, please do not reply.</p>" +
+                "<p style='margin: 5px 0; font-size: 12px; color: #999;'>© 2025 Gym App. Developed by HuyHoang</p>" +
+                "<p style='margin: 15px 0 0 0; font-size: 11px; color: #ccc;'>📧 Sent via Gmail SMTP: " + new java.util.Date().toString() + "</p>" +
                 "</div>" +
 
                 "</div>" +
