@@ -571,10 +571,10 @@ public class FavoriteActivity extends AppCompatActivity {
     protected void onDestroy() {
         super.onDestroy();
         try {
-            // ✅ Unregister broadcast receiver
+            // ✅ FIXED: Unregister với LocalBroadcastManager (cùng loại với register)
             if (favoritesReceiver != null) {
-                unregisterReceiver(favoritesReceiver);
-                Log.d("FavoriteActivity", "✅ Favorites receiver unregistered");
+                LocalBroadcastManager.getInstance(this).unregisterReceiver(favoritesReceiver);
+                Log.d("FavoriteActivity", "✅ Local favorites receiver unregistered");
             }
         } catch (Exception e) {
             Log.e("FavoriteActivity", "Error in onDestroy: " + e.getMessage(), e);

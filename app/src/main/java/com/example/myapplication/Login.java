@@ -30,6 +30,25 @@ public class Login extends AppCompatActivity {
         btnLogin = findViewById(R.id.btnLogin);
         tvRegisterHere = findViewById(R.id.tvRegisterHere);
 
+        TextView tvForgotPassword = findViewById(R.id.tvForgotPassword);
+        if (tvForgotPassword != null) {
+            tvForgotPassword.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent intent = new Intent(Login.this, ForgotPasswordActivity.class);
+                    startActivity(intent);
+                }
+            });
+        }
+
+        Intent intent = getIntent();
+        if (intent.getBooleanExtra("reset_success", false)) {
+            String email = intent.getStringExtra("email");
+            if (email != null && etEmail != null) {
+                etEmail.setText(email);
+            }
+            Toast.makeText(this, "✅ Đặt lại mật khẩu thành công! Vui lòng đăng nhập.", Toast.LENGTH_LONG).show();
+        }
         // ✅ KIỂM TRA SESSION HIỆN TẠI
         checkExistingSession();
 

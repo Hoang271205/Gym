@@ -536,6 +536,29 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
         return user;
     }
+    public boolean updateUserPassword(int userId, String newPassword) {
+        SQLiteDatabase db = this.getWritableDatabase();
+
+        try {
+            ContentValues values = new ContentValues();
+            values.put(KEY_PASSWORD, newPassword);
+
+            String whereClause = KEY_ID + " = ?";
+            String[] whereArgs = {String.valueOf(userId)};
+
+            int rowsAffected = db.update(TABLE_USERS, values, whereClause, whereArgs);
+            Log.d("DatabaseHelper", "Password updated, rows affected: " + rowsAffected);
+
+            return rowsAffected > 0;
+        } catch (Exception e) {
+            Log.e("DatabaseHelper", "Error updating password: " + e.getMessage(), e);
+            return false;
+        } finally {
+            if (db != null) {
+                db.close();
+            }
+        }
+    }
     // Method helper để lấy thông tin user theo ID
     public User getUserById(int userId) {
         SQLiteDatabase db = this.getReadableDatabase();
