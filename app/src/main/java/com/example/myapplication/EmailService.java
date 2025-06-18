@@ -238,7 +238,7 @@ public class EmailService {
                 "<div style='text-align: center; margin-top: 40px; padding-top: 30px; border-top: 2px solid #f0f0f0; color: #666;'>" +
                 "<h3 style='margin: 0 0 10px 0; color: #FF7300; font-size: 18px;'>Cảm ơn bạn đã sử dụng Gym App! 🏋️‍♀️</h3>" +
                 "<p style='margin: 5px 0; font-size: 14px;'>Đây là email tự động, vui lòng không phản hồi.</p>" +
-                "<p style='margin: 5px 0; font-size: 12px; color: #999;'>© 2025 Gym App. Developed by HienTruongTHMH</p>" +
+                "<p style='margin: 5px 0; font-size: 12px; color: #999;'>© 2025 Gym App. Developed by Phạm Huy Hoàng</p>" +
                 "<p style='margin: 15px 0 0 0; font-size: 11px; color: #ccc;'>📧 Gửi qua Gmail SMTP: " + new java.util.Date().toString() + "</p>" +
                 "</div>" +
 
