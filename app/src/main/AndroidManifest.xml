@@ -3,6 +3,8 @@
     package="com.example.myapplication"
     xmlns:tools="http://schemas.android.com/tools">
 
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <application
         android:allowBackup="true"
         android:dataExtractionRules="@xml/data_extraction_rules"
@@ -27,6 +29,15 @@
         <!-- Authentication activities -->
         <activity
             android:name=".Login"
+            android:theme="@style/Theme.MyApplication" />
+        <activity
+            android:name=".ForgotPasswordActivity"
+            android:theme="@style/Theme.MyApplication" />
+        <activity
+            android:name=".VerifyCodeActivity"
+            android:theme="@style/Theme.MyApplication" />
+        <activity
+            android:name=".ResetPasswordActivity"
             android:theme="@style/Theme.MyApplication" />
 
         <activity

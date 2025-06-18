@@ -40,7 +40,7 @@
         app:layout_constraintStart_toStartOf="parent"
         android:layout_marginTop="24dp"
         android:layout_marginStart="16dp"
-        android:contentDescription="@string/back_button_desc"/>
+        android:contentDescription="back button"/>
 
     <TextView
         android:id="@+id/tvWelcome"
@@ -121,13 +121,29 @@
             android:background="@android:color/transparent"/>
     </LinearLayout>
 
+    <!-- ✅ NEW: Forgot Password Link -->
+    <TextView
+        android:id="@+id/tvForgotPassword"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Forgot Password?"
+        android:textColor="#FF7300"
+        android:textSize="14sp"
+        android:textStyle="bold"
+        android:clickable="true"
+        android:focusable="true"
+        android:padding="8dp"
+        app:layout_constraintTop_toBottomOf="@id/passwordField"
+        app:layout_constraintEnd_toEndOf="@id/passwordField"
+        android:layout_marginTop="8dp"/>
+
     <!-- Login Button -->
     <Button
         android:id="@+id/btnLogin"
         android:layout_width="0dp"
         android:layout_height="48dp"
         android:layout_marginStart="60dp"
-        android:layout_marginTop="68dp"
+        android:layout_marginTop="32dp"
         android:layout_marginEnd="60dp"
         android:backgroundTint="#FF7300"
         android:text="Login"
@@ -135,7 +151,7 @@
         android:textSize="18sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/passwordField" />
+        app:layout_constraintTop_toBottomOf="@id/tvForgotPassword" />
 
     <!-- Or login with -->
     <TextView
@@ -170,7 +186,7 @@
             android:scaleType="centerInside"
             android:src="@drawable/ic_apple"
             android:layout_marginEnd="16dp"
-            android:contentDescription="@string/login_apple"/>
+            android:contentDescription="login apple"/>
 
         <ImageButton
             android:id="@+id/btnFacebook"
@@ -180,7 +196,7 @@
             android:scaleType="centerInside"
             android:src="@drawable/ic_facebook"
             android:layout_marginEnd="16dp"
-            android:contentDescription="@string/login_face"/>
+            android:contentDescription="login facebook"/>
 
         <ImageButton
             android:id="@+id/btnGoogle"
@@ -189,7 +205,7 @@
             android:background="@drawable/rounded_social_transparent"
             android:scaleType="centerInside"
             android:src="@drawable/ic_google"
-            android:contentDescription="@string/login_google"/>
+            android:contentDescription="login google"/>
 
     </LinearLayout>
 
@@ -223,6 +239,5 @@
             android:clickable="true"
             android:focusable="true"/>
     </LinearLayout>
-
 
 </androidx.constraintlayout.widget.ConstraintLayout>
