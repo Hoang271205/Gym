@@ -9,12 +9,15 @@ import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
 import java.util.ArrayList;
 import java.util.List;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.Locale;
 
 public class DatabaseHelper extends SQLiteOpenHelper {
 
     // Database Info
     private static final String DATABASE_NAME = "GymApp.db";
-    private static final int DATABASE_VERSION = 5; // ✅ TĂNG VERSION ĐỂ FORCE RECREATE FAVORITES TABLE
+    private static final int DATABASE_VERSION = 6; // ✅ TĂNG VERSION ĐỂ FORCE RECREATE FAVORITES TABLE
 
     // Table Names
     private static final String TABLE_USERS = "users";
@@ -108,6 +111,22 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                 + "FOREIGN KEY(" + FAVORITE_WORKOUT_ID + ") REFERENCES " + TABLE_WORKOUTS + "(" + WORKOUT_ID + "),"
                 + "UNIQUE(" + FAVORITE_WORKOUT_ID + ", " + FAVORITE_USER_ID + ")"
                 + ")";
+        String CREATE_WORKOUT_SESSIONS_TABLE = "CREATE TABLE workout_sessions (" +
+                "id INTEGER PRIMARY KEY AUTOINCREMENT, " +
+                "user_id TEXT NOT NULL, " +
+                "workout_id INTEGER NOT NULL, " +
+                "workout_title TEXT NOT NULL, " +
+                "calories_burned INTEGER DEFAULT 0, " +
+                "duration_seconds INTEGER DEFAULT 0, " +
+                "exercises_completed INTEGER DEFAULT 0, " +
+                "total_exercises INTEGER DEFAULT 0, " +
+                "completion_percentage INTEGER DEFAULT 0, " +
+                "session_date TEXT NOT NULL, " +
+                "created_at DATETIME DEFAULT CURRENT_TIMESTAMP" +
+                ")";
+        db.execSQL(CREATE_WORKOUT_SESSIONS_TABLE);
+
+
 
         // Thực thi tạo tables
         db.execSQL(CREATE_USERS_TABLE);
@@ -119,6 +138,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
         Log.d("DatabaseHelper", "Database tables created with version " + DATABASE_VERSION);
     }
+
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
@@ -174,7 +194,6 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             Log.d("DatabaseHelper", "Upgraded to version 4: Added favorites table");
         }
 
-        // ✅ NEW: Force recreate favorites table to ensure it works properly
         if (oldVersion < 5) {
             db.execSQL("DROP TABLE IF EXISTS " + TABLE_FAVORITES);
             String CREATE_FAVORITES_TABLE = "CREATE TABLE " + TABLE_FAVORITES + "("
@@ -187,6 +206,30 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                     + ")";
             db.execSQL(CREATE_FAVORITES_TABLE);
             Log.d("DatabaseHelper", "Upgraded to version 5: Favorites table recreated");
+        }
+
+        // ✅ NEW: Add workout_sessions table for tracking
+        if (oldVersion < 6) {
+            String CREATE_WORKOUT_SESSIONS_TABLE = "CREATE TABLE IF NOT EXISTS workout_sessions (" +
+                    "id INTEGER PRIMARY KEY AUTOINCREMENT, " +
+                    "user_id TEXT NOT NULL, " +
+                    "workout_id INTEGER NOT NULL, " +
+                    "workout_title TEXT NOT NULL, " +
+                    "calories_burned INTEGER DEFAULT 0, " +
+                    "duration_seconds INTEGER DEFAULT 0, " +
+                    "exercises_completed INTEGER DEFAULT 0, " +
+                    "total_exercises INTEGER DEFAULT 0, " +
+                    "completion_percentage INTEGER DEFAULT 0, " +
+                    "session_date TEXT NOT NULL, " +
+                    "created_at DATETIME DEFAULT CURRENT_TIMESTAMP" +
+                    ")";
+
+            try {
+                db.execSQL(CREATE_WORKOUT_SESSIONS_TABLE);
+                Log.d("DatabaseHelper", "Upgraded to version 6: Added workout_sessions table");
+            } catch (Exception e) {
+                Log.e("DatabaseHelper", "❌ Error creating workout_sessions table: " + e.getMessage(), e);
+            }
         }
     }
 
@@ -254,54 +297,35 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         SharedPreferences prefs = context.getSharedPreferences("UserPrefs", Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = prefs.edit();
 
-        editor.putString("user_id", userId);
+        // ✅ Convert string userId thành int và lưu
+        try {
+            int userIdInt = Integer.parseInt(userId);
+            editor.putInt("user_id", userIdInt);
+        } catch (NumberFormatException e) {
+            Log.e("DatabaseHelper", "❌ Invalid user ID: " + userId);
+            editor.putInt("user_id", -1);
+        }
+
         editor.putString("username", username);
         editor.putString("email", email);
         editor.putBoolean("is_logged_in", true);
 
         editor.apply();
 
-        Log.d("DatabaseHelper", "✅ User session saved: " + userId);
+        Log.d("DatabaseHelper", "✅ User session saved: ID=" + userId + ", Username=" + username);
     }
 
-    // ✅ Lấy current user ID
+    // ✅ SỬA getCurrentUserId để consistent với int
     public static String getCurrentUserId(Context context) {
         SharedPreferences prefs = context.getSharedPreferences("UserPrefs", Context.MODE_PRIVATE);
+        int userId = prefs.getInt("user_id", -1);
 
-        // ✅ FIX: Try to get as String first, then as Int if failed
-        String userId = null;
-
-        try {
-            // Try to get as String first
-            userId = prefs.getString("user_id", "");
-        } catch (ClassCastException e) {
-            // If failed, it means it was stored as Integer, so get as Int and convert
-            try {
-                int userIdInt = prefs.getInt("user_id", -1);
-                if (userIdInt != -1) {
-                    userId = String.valueOf(userIdInt);
-
-                    // ✅ FIX: Update SharedPreferences to store as String for future use
-                    SharedPreferences.Editor editor = prefs.edit();
-                    editor.remove("user_id"); // Remove old Integer value
-                    editor.putString("user_id", userId); // Store as String
-                    editor.apply();
-
-                    Log.d("DatabaseHelper", "🔧 Converted user_id from Integer to String: " + userId);
-                }
-            } catch (Exception ex) {
-                Log.e("DatabaseHelper", "❌ Error getting user_id: " + ex.getMessage());
-            }
+        if (userId == -1) {
+            Log.w("DatabaseHelper", "⚠️ No user session found");
+            return "";
         }
 
-        // ✅ Fallback nếu không có session
-        if (userId == null || userId.trim().isEmpty()) {
-            Log.w("DatabaseHelper", "⚠️ No user session found - user needs to login");
-            return ""; // Trả về empty thay vì hardcode
-        }
-
-        Log.d("DatabaseHelper", "✅ Current User ID: '" + userId + "'");
-        return userId;
+        return String.valueOf(userId);
     }
 
     // ✅ Lấy username hiện tại
@@ -467,7 +491,6 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         return userList;
     }
 
-    // Đếm số lượng users
     public int getUserCount() {
         SQLiteDatabase db = this.getReadableDatabase();
         String countQuery = "SELECT COUNT(*) FROM " + TABLE_USERS;
@@ -489,15 +512,16 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         User user = null;
 
         try {
-            String query = "SELECT * FROM users WHERE username = ?";
+            // ✅ FIX: Dùng TABLE_USERS và KEY_USERNAME
+            String query = "SELECT * FROM " + TABLE_USERS + " WHERE " + KEY_USERNAME + " = ?";
             cursor = db.rawQuery(query, new String[]{username});
 
             if (cursor.moveToFirst()) {
                 user = new User();
-                user.setId(cursor.getInt(cursor.getColumnIndexOrThrow("id")));
-                user.setUsername(cursor.getString(cursor.getColumnIndexOrThrow("username")));
-                user.setEmail(cursor.getString(cursor.getColumnIndexOrThrow("email")));
-                // Don't return password for security
+                // ✅ FIX: Dùng đúng constant names
+                user.setId(cursor.getInt(cursor.getColumnIndexOrThrow(KEY_ID)));
+                user.setUsername(cursor.getString(cursor.getColumnIndexOrThrow(KEY_USERNAME)));
+                user.setEmail(cursor.getString(cursor.getColumnIndexOrThrow(KEY_EMAIL)));
 
                 Log.d("DatabaseHelper", "✅ Found user: " + username + " with ID: " + user.getId());
             } else {
@@ -507,6 +531,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             Log.e("DatabaseHelper", "❌ Error getting user by username: " + e.getMessage(), e);
         } finally {
             if (cursor != null) cursor.close();
+            db.close();
         }
 
         return user;
@@ -1212,4 +1237,197 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         public int totalCalories = 0;
         public int uniqueTypes = 0;
     }
+    public static class DailyStats {
+        public int totalCalories = 0;
+        public int totalDurationSeconds = 0;
+        public int totalWorkouts = 0;
+
+        public DailyStats() {
+            // Constructor mặc định
+        }
+
+        public DailyStats(int calories, int duration, int workouts) {
+            this.totalCalories = calories;
+            this.totalDurationSeconds = duration;
+            this.totalWorkouts = workouts;
+        }
+    }
+    private String formatDuration(int seconds) {
+        if (seconds <= 0) return "0min";
+
+        int minutes = seconds / 60;
+        int secs = seconds % 60;
+
+        if (minutes > 0 && secs > 0) {
+            return String.format("%dm %ds", minutes, secs);
+        } else if (minutes > 0) {
+            return String.format("%dm", minutes);
+        } else {
+            return String.format("%ds", secs);
+        }
+    }
+
+    private String formatTotalDuration(int totalSeconds) {
+        if (totalSeconds <= 0) return "0min";
+
+        int days = totalSeconds / (24 * 3600);
+        int hours = (totalSeconds % (24 * 3600)) / 3600;
+        int minutes = (totalSeconds % 3600) / 60;
+
+        if (days > 0) {
+            if (hours > 0) {
+                return String.format("%dd %dh", days, hours);
+            } else {
+                return String.format("%dd", days);
+            }
+        } else if (hours > 0) {
+            if (minutes > 0) {
+                return String.format("%dh %dm", hours, minutes);
+            } else {
+                return String.format("%dh", hours);
+            }
+        } else if (minutes > 0) {
+            return String.format("%dm", minutes);
+        } else {
+            return "1m"; // Minimum display
+        }
+    }
+    public DailyStats getDailyStats(String userId, String date) {
+        SQLiteDatabase db = this.getReadableDatabase();
+        DailyStats stats = new DailyStats();
+
+        // Get today's stats
+        String query = "SELECT " +
+                "SUM(calories_burned) as total_calories, " +
+                "SUM(duration_seconds) as total_duration, " +
+                "COUNT(*) as total_workouts " +
+                "FROM workout_sessions " +
+                "WHERE user_id = ? AND session_date = ?";
+
+        Cursor cursor = null;
+        try {
+            cursor = db.rawQuery(query, new String[]{userId, date});
+
+            if (cursor.moveToFirst()) {
+                stats.totalCalories = cursor.getInt(cursor.getColumnIndexOrThrow("total_calories"));
+                stats.totalDurationSeconds = cursor.getInt(cursor.getColumnIndexOrThrow("total_duration"));
+                stats.totalWorkouts = cursor.getInt(cursor.getColumnIndexOrThrow("total_workouts"));
+
+                Log.d("DatabaseHelper", "📊 Daily stats for " + date + ": " +
+                        stats.totalCalories + " cal, " + formatDuration(stats.totalDurationSeconds) +
+                        ", " + stats.totalWorkouts + " workouts");
+            }
+        } catch (Exception e) {
+            Log.e("DatabaseHelper", "❌ Error getting daily stats: " + e.getMessage(), e);
+        } finally {
+            if (cursor != null) cursor.close();
+            db.close();
+        }
+
+        return stats;
+    }
+
+    // ✅ THÊM method để get total workout time
+    public String getTotalWorkoutTime(String userId) {
+        SQLiteDatabase db = this.getReadableDatabase();
+        String totalTime = "0min";
+
+        String query = "SELECT SUM(duration_seconds) as total_seconds FROM workout_sessions WHERE user_id = ?";
+
+        Cursor cursor = null;
+        try {
+            cursor = db.rawQuery(query, new String[]{userId});
+
+            if (cursor.moveToFirst()) {
+                int totalSeconds = cursor.getInt(cursor.getColumnIndexOrThrow("total_seconds"));
+                totalTime = formatTotalDuration(totalSeconds);
+
+                Log.d("DatabaseHelper", "📊 Total workout time: " + totalTime);
+            }
+        } catch (Exception e) {
+            Log.e("DatabaseHelper", "❌ Error getting total workout time: " + e.getMessage(), e);
+        } finally {
+            if (cursor != null) cursor.close();
+            db.close();
+        }
+
+        return totalTime;
+    }
+    // ✅ THÊM method này vào DatabaseHelper
+    public boolean saveWorkoutSession(String userId, int workoutId, String workoutTitle,
+                                      int caloriesBurned, int durationSeconds,
+                                      int exercisesCompleted, int totalExercises) {
+        SQLiteDatabase db = null;
+        try {
+            db = this.getWritableDatabase();
+            ContentValues values = new ContentValues();
+
+            String today = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(new Date());
+            int completionPercentage = totalExercises > 0 ? (exercisesCompleted * 100) / totalExercises : 0;
+
+            values.put("user_id", userId);
+            values.put("workout_id", workoutId);
+            values.put("workout_title", workoutTitle);
+            values.put("calories_burned", caloriesBurned);
+            values.put("duration_seconds", durationSeconds);
+            values.put("exercises_completed", exercisesCompleted);
+            values.put("total_exercises", totalExercises);
+            values.put("completion_percentage", completionPercentage);
+            values.put("session_date", today);
+
+            long result = db.insert("workout_sessions", null, values);
+
+            if (result != -1) {
+                Log.d("DatabaseHelper", "✅ Workout session saved - ID: " + result);
+                Log.d("DatabaseHelper", "📊 Stats: " + caloriesBurned + " calories, " +
+                        formatDuration(durationSeconds) + ", " + exercisesCompleted + "/" + totalExercises + " exercises");
+                return true;
+            } else {
+                Log.e("DatabaseHelper", "❌ Failed to save workout session");
+                return false;
+            }
+        } catch (Exception e) {
+            Log.e("DatabaseHelper", "❌ Error saving workout session: " + e.getMessage(), e);
+            return false;
+        } finally {
+            if (db != null) {
+                try {
+                    db.close();
+                } catch (Exception e) {
+                    Log.e("DatabaseHelper", "Error closing database: " + e.getMessage());
+                }
+            }
+        }
+    }
+    // ✅ SỬA method getLastLoggedInUser() - dùng đúng constant names
+    public User getLastLoggedInUser() {
+        SQLiteDatabase db = this.getReadableDatabase();
+        User user = null;
+
+        // ✅ FIX: Dùng KEY_ID và KEY_USERNAME thay vì USER_ID và USER_USERNAME
+        String query = "SELECT * FROM " + TABLE_USERS + " ORDER BY " + KEY_ID + " DESC LIMIT 1";
+        Cursor cursor = null;
+
+        try {
+            cursor = db.rawQuery(query, null);
+
+            if (cursor.moveToFirst()) {
+                user = new User();
+                // ✅ FIX: Dùng đúng constant names
+                user.setId(cursor.getInt(cursor.getColumnIndexOrThrow(KEY_ID)));
+                user.setUsername(cursor.getString(cursor.getColumnIndexOrThrow(KEY_USERNAME)));
+                user.setEmail(cursor.getString(cursor.getColumnIndexOrThrow(KEY_EMAIL)));
+
+                Log.d("DatabaseHelper", "✅ Found last user: " + user.getUsername());
+            }
+        } catch (Exception e) {
+            Log.e("DatabaseHelper", "❌ Error getting last user: " + e.getMessage(), e);
+        } finally {
+            if (cursor != null) cursor.close();
+            db.close();
+        }
+
+        return user;
+    }
+
 }

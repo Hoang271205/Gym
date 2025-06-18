@@ -15,7 +15,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import java.util.ArrayList;
 import java.util.List;
 
-public class WorkoutCardAdapter extends RecyclerView.Adapter<WorkoutCardAdapter.WorkoutViewHolder>  {
+public class WorkoutCardAdapter extends RecyclerView.Adapter<WorkoutCardAdapter.WorkoutViewHolder> {
     private List<WorkoutCard> workoutList;
     private List<WorkoutCard> filteredList;
 
@@ -27,7 +27,7 @@ public class WorkoutCardAdapter extends RecyclerView.Adapter<WorkoutCardAdapter.
     @NonNull
     @Override
     public WorkoutViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.workout_card,parent,false);
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.workout_card, parent, false);
         return new WorkoutViewHolder(view);
     }
 
@@ -39,32 +39,58 @@ public class WorkoutCardAdapter extends RecyclerView.Adapter<WorkoutCardAdapter.
         holder.calories.setText(String.valueOf(workoutcard.getCalories()));
         holder.image.setImageBitmap(workoutcard.getImage());
 
-        // ✅ SỬA: Truyền đầy đủ workout data + user_id
+        // ✅ DYNAMIC FIX: Truyền user data từ MainActivity
         holder.itemView.setOnClickListener(v -> {
             Context context = v.getContext();
-            Intent intent = new Intent(context, UniversalWorkoutDetailsActivity.class);
 
-            // ✅ LẤY USER ID từ DatabaseHelper
-            String currentUserId = DatabaseHelper.getCurrentUserId(context);
+            try {
+                Intent intent = new Intent(context, UniversalWorkoutDetailsActivity.class);
 
-            Log.d("WorkoutCardAdapter", "🚀 Opening workout ID: " + workoutcard.getId() + " for user: " + currentUserId);
+                // ✅ DYNAMIC: Get user data from MainActivity if possible
+                String currentUserId = "";
+                String currentUsername = "User";
 
-            // ✅ TRUYỀN USER ID
-            intent.putExtra("user_id", currentUserId);
+                if (context instanceof MainActivity) {
+                    MainActivity mainActivity = (MainActivity) context;
+                    currentUserId = mainActivity.getCurrentUserId();
+                    currentUsername = mainActivity.getCurrentUsername();
+                    Log.d("WorkoutCardAdapter", "✅ Got user data from MainActivity: ID=" + currentUserId + ", Username=" + currentUsername);
+                } else {
+                    // Fallback: Get from DatabaseHelper
+                    currentUserId = DatabaseHelper.getCurrentUserId(context);
+                    Log.d("WorkoutCardAdapter", "✅ Got user data from DatabaseHelper: ID=" + currentUserId);
+                }
 
-            // Truyền tất cả workout data
-            intent.putExtra("workout_id", workoutcard.getId());
-            intent.putExtra("workout_title", workoutcard.getTitle());
-            intent.putExtra("workout_details", workoutcard.getDetails());
-            intent.putExtra("workout_calories", workoutcard.getCalories());
-            intent.putExtra("workout_type", workoutcard.getType());
-            intent.putExtra("workout_duration", workoutcard.getDuration());
-            intent.putExtra("workout_level", workoutcard.getLevel());
-            intent.putExtra("workout_description", workoutcard.getDescription());
-            intent.putExtra("workout_image_name", workoutcard.getImageName());
-            intent.putExtra("workout_activity_class", "UniversalWorkoutDetailsActivity");
+                Log.d("WorkoutCardAdapter", "🚀 Opening workout ID: " + workoutcard.getId() + " for user: " + currentUserId);
 
-            context.startActivity(intent);
+                // ✅ PASS USER DATA DYNAMICALLY
+                try {
+                    int userIdInt = Integer.parseInt(currentUserId);
+                    intent.putExtra("user_id", userIdInt);
+                } catch (NumberFormatException e) {
+                    Log.w("WorkoutCardAdapter", "Invalid user_id format: " + currentUserId);
+                    intent.putExtra("user_id", 1); // Fallback
+                }
+
+                intent.putExtra("username", currentUsername);
+
+                // Truyền tất cả workout data
+                intent.putExtra("workout_id", workoutcard.getId());
+                intent.putExtra("workout_title", workoutcard.getTitle());
+                intent.putExtra("workout_details", workoutcard.getDetails());
+                intent.putExtra("workout_calories", workoutcard.getCalories());
+                intent.putExtra("workout_type", workoutcard.getType());
+                intent.putExtra("workout_duration", workoutcard.getDuration());
+                intent.putExtra("workout_level", workoutcard.getLevel());
+                intent.putExtra("workout_description", workoutcard.getDescription());
+                intent.putExtra("workout_image_name", workoutcard.getImageName());
+                intent.putExtra("workout_activity_class", "UniversalWorkoutDetailsActivity");
+
+                context.startActivity(intent);
+
+            } catch (Exception e) {
+                Log.e("WorkoutCardAdapter", "❌ Error starting workout activity: " + e.getMessage(), e);
+            }
         });
     }
 
@@ -73,14 +99,14 @@ public class WorkoutCardAdapter extends RecyclerView.Adapter<WorkoutCardAdapter.
         return filteredList.size();
     }
 
-    public void filter(String query){
+    public void filter(String query) {
         filteredList.clear();
         if (query == null || query.trim().isEmpty()) {
             filteredList.addAll(workoutList);
         } else {
             String lowerQuery = query.toLowerCase();
-            for (WorkoutCard c : workoutList){
-                if (c.getTitle().toLowerCase().contains(lowerQuery)){
+            for (WorkoutCard c : workoutList) {
+                if (c.getTitle().toLowerCase().contains(lowerQuery)) {
                     filteredList.add(c);
                 }
             }
@@ -88,10 +114,11 @@ public class WorkoutCardAdapter extends RecyclerView.Adapter<WorkoutCardAdapter.
         notifyDataSetChanged();
     }
 
-    static class WorkoutViewHolder extends RecyclerView.ViewHolder{
-        TextView title,details,calories,activity;
+    static class WorkoutViewHolder extends RecyclerView.ViewHolder {
+        TextView title, details, calories, activity;
         ImageView image;
-        public WorkoutViewHolder(@NonNull View itemview){
+
+        public WorkoutViewHolder(@NonNull View itemview) {
             super(itemview);
             title = itemView.findViewById(R.id.tvWorkoutTitle);
             details = itemView.findViewById(R.id.tvWorkoutDetails);

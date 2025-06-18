@@ -118,7 +118,14 @@ public class Login extends AppCompatActivity {
     private void navigateToMainActivity(String userId, String username, String email) {
         Intent intent = new Intent(Login.this, MainActivity.class);
 
-        intent.putExtra("user_id", userId);
+        // ✅ QUAN TRỌNG: Convert string userId thành int
+        try {
+            int userIdInt = Integer.parseInt(userId);
+            intent.putExtra("user_id", userIdInt); // Truyền int, không phải string
+        } catch (NumberFormatException e) {
+            intent.putExtra("user_id", -1);
+        }
+
         intent.putExtra("username", username);
         intent.putExtra("email", email);
 

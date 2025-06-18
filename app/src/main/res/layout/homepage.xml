@@ -61,7 +61,7 @@
                         android:id="@+id/tvName"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Nguyen Tri"
+                        android:text="HienTruongTHMH"
                         android:textColor="#FFF"
                         android:textSize="28sp"
                         android:textStyle="bold"
@@ -77,7 +77,7 @@
                 </LinearLayout>
             </LinearLayout>
 
-            <!-- Simple, working search bar with exercise title -->
+            <!-- Search Bar -->
             <LinearLayout
                 android:id="@+id/llSearch"
                 android:layout_width="0dp"
@@ -94,7 +94,6 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/llWelcome">
 
-                <!-- Search Icon -->
                 <ImageView
                     android:id="@+id/btnSearch"
                     android:layout_width="24dp"
@@ -102,7 +101,6 @@
                     android:src="@drawable/ic_search_white"
                     android:contentDescription="Search"/>
 
-                <!-- Search Input -->
                 <EditText
                     android:id="@+id/etSearch"
                     android:layout_width="0dp"
@@ -117,10 +115,9 @@
                     android:textColor="#FFFFFF"
                     android:textColorHint="#888888"
                     android:textSize="16sp"/>
-
             </LinearLayout>
 
-            <!-- Daily Monitoring label -->
+            <!-- Daily Monitoring Label -->
             <TextView
                 android:id="@+id/tvDailyMonitoring"
                 android:layout_width="wrap_content"
@@ -134,7 +131,7 @@
                 android:layout_marginTop="32dp"
                 android:layout_marginStart="24dp"/>
 
-            <!-- Daily Monitoring Stats -->
+            <!-- ✅ UPDATED: Dynamic Stats with Database Data -->
             <LinearLayout
                 android:id="@+id/llStats"
                 android:layout_width="0dp"
@@ -147,7 +144,7 @@
                 android:layout_marginStart="24dp"
                 android:layout_marginEnd="24dp">
 
-                <!-- Calories -->
+                <!-- Daily Calories -->
                 <LinearLayout
                     android:layout_width="0dp"
                     android:layout_weight="1"
@@ -162,9 +159,10 @@
                         app:tint="#FF6B35"
                         android:layout_marginBottom="8dp"/>
                     <TextView
+                        android:id="@+id/tvDailyCalories"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="2550"
+                        android:text="0"
                         android:textColor="#FFF"
                         android:textSize="22sp"
                         android:textStyle="bold"
@@ -177,37 +175,7 @@
                         android:textSize="12sp"/>
                 </LinearLayout>
 
-                <!-- Sleep -->
-                <LinearLayout
-                    android:layout_width="0dp"
-                    android:layout_weight="1"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical"
-                    android:gravity="center_horizontal">
-
-                    <ImageView
-                        android:layout_width="40dp"
-                        android:layout_height="40dp"
-                        android:src="@drawable/ic_banana"
-                        app:tint="#FFD700"
-                        android:layout_marginBottom="8dp"/>
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="6h 45min"
-                        android:textColor="#FFF"
-                        android:textSize="22sp"
-                        android:textStyle="bold"
-                        android:layout_marginBottom="4dp"/>
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Daily Sleep"
-                        android:textColor="#AAA"
-                        android:textSize="12sp"/>
-                </LinearLayout>
-
-                <!-- Workout -->
+                <!-- Daily Workout Time -->
                 <LinearLayout
                     android:layout_width="0dp"
                     android:layout_weight="1"
@@ -219,12 +187,13 @@
                         android:layout_width="40dp"
                         android:layout_height="40dp"
                         android:src="@drawable/ic_clock"
-                        app:tint="#FFF"
+                        app:tint="#4CAF50"
                         android:layout_marginBottom="8dp"/>
                     <TextView
+                        android:id="@+id/tvDailyTime"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="2w 4days"
+                        android:text="0min"
                         android:textColor="#FFF"
                         android:textSize="22sp"
                         android:textStyle="bold"
@@ -232,7 +201,38 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Total workout"
+                        android:text="Daily Workout"
+                        android:textColor="#AAA"
+                        android:textSize="12sp"/>
+                </LinearLayout>
+
+                <!-- Total Workout Time -->
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:gravity="center_horizontal">
+
+                    <ImageView
+                        android:layout_width="40dp"
+                        android:layout_height="40dp"
+                        android:src="@drawable/ic_dumbbell"
+                        app:tint="#FFD700"
+                        android:layout_marginBottom="8dp"/>
+                    <TextView
+                        android:id="@+id/tvTotalWorkout"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="0min"
+                        android:textColor="#FFF"
+                        android:textSize="22sp"
+                        android:textStyle="bold"
+                        android:layout_marginBottom="4dp"/>
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Total Workout"
                         android:textColor="#AAA"
                         android:textSize="12sp"/>
                 </LinearLayout>
@@ -251,10 +251,9 @@
                 android:layout_marginEnd="12dp">
 
                 <include layout="@layout/featured_card"/>
-
             </FrameLayout>
 
-            <!-- Other Workout header -->
+            <!-- Other Workout Header -->
             <LinearLayout
                 android:id="@+id/llOtherHeader"
                 android:layout_width="0dp"
@@ -303,7 +302,7 @@
         </androidx.constraintlayout.widget.ConstraintLayout>
     </ScrollView>
 
-    <!-- ✅ FIXED: Bottom Navigation với proper IDs -->
+    <!-- Bottom Navigation -->
     <LinearLayout
         android:id="@+id/bottomNav"
         android:layout_width="match_parent"
@@ -314,7 +313,6 @@
         android:elevation="8dp"
         android:layout_alignParentBottom="true">
 
-        <!-- ✅ HOME NAVIGATION -->
         <LinearLayout
             android:id="@+id/navHome"
             android:layout_width="0dp"
@@ -337,7 +335,6 @@
                 android:textSize="12sp"/>
         </LinearLayout>
 
-        <!-- ✅ FAVORITE NAVIGATION -->
         <LinearLayout
             android:id="@+id/navFavorite"
             android:layout_width="0dp"
@@ -360,7 +357,6 @@
                 android:textSize="12sp"/>
         </LinearLayout>
 
-        <!-- ✅ PROFILE NAVIGATION -->
         <LinearLayout
             android:id="@+id/navProfile"
             android:layout_width="0dp"
