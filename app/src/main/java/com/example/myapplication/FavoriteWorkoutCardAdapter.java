@@ -20,16 +20,21 @@ public class FavoriteWorkoutCardAdapter extends RecyclerView.Adapter<FavoriteWor
     private List<WorkoutCard> workoutList;
     private List<WorkoutCard> filteredList;
     private OnRemoveFromFavoritesListener onRemoveListener;
+    private String currentUserId; // ✅ THÊM FIELD NÀY
 
     public interface OnRemoveFromFavoritesListener {
         void onRemoveFromFavorites(WorkoutCard workoutCard);
     }
 
-    public FavoriteWorkoutCardAdapter(List<WorkoutCard> workoutList, OnRemoveFromFavoritesListener listener) {
+    // ✅ SỬA CONSTRUCTOR để nhận user_id
+    public FavoriteWorkoutCardAdapter(List<WorkoutCard> workoutList,
+                                      OnRemoveFromFavoritesListener listener,
+                                      String userId) { // ✅ THÊM PARAMETER
         this.workoutList = new ArrayList<>(workoutList);
         this.filteredList = new ArrayList<>(workoutList);
         this.onRemoveListener = listener;
-        Log.d("FavoriteAdapter", "Created adapter with " + workoutList.size() + " items");
+        this.currentUserId = userId; // ✅ LƯU USER ID
+        Log.d("FavoriteAdapter", "Created adapter with " + workoutList.size() + " items, User ID: " + userId);
     }
 
     @NonNull
@@ -54,16 +59,20 @@ public class FavoriteWorkoutCardAdapter extends RecyclerView.Adapter<FavoriteWor
         if (workoutCard.getImage() != null) {
             holder.image.setImageBitmap(workoutCard.getImage());
         } else {
-            holder.image.setImageResource(R.drawable.pushup_card); // Default image
+            holder.image.setImageResource(R.drawable.pushup_card);
         }
 
-        // Click to open workout details
+        // ✅ SỬA onClick để truyền user_id
         holder.itemView.setOnClickListener(v -> {
             Context context = v.getContext();
             Intent intent = new Intent(context, UniversalWorkoutDetailsActivity.class);
 
-            Log.d("FavoriteAdapter", "Opening workout: " + workoutCard.getTitle() + " (ID: " + workoutCard.getId() + ")");
+            Log.d("FavoriteAdapter", "Opening workout: " + workoutCard.getTitle() + " (ID: " + workoutCard.getId() + ") for user: " + currentUserId);
 
+            // ✅ TRUYỀN USER INFO
+            intent.putExtra("user_id", currentUserId);
+
+            // Workout info
             intent.putExtra("workout_id", workoutCard.getId());
             intent.putExtra("workout_title", workoutCard.getTitle());
             intent.putExtra("workout_details", workoutCard.getDetails());
@@ -150,7 +159,7 @@ public class FavoriteWorkoutCardAdapter extends RecyclerView.Adapter<FavoriteWor
             image = itemView.findViewById(R.id.tvImagecard);
             btnRemove = itemView.findViewById(R.id.btnRemoveFavorite);
 
-            // ✅ Đảm bảo tất cả views được tìm thấy
+            // Đảm bảo tất cả views được tìm thấy
             if (title == null) Log.e("FavoriteAdapter", "tvWorkoutTitle not found");
             if (details == null) Log.e("FavoriteAdapter", "tvWorkoutDetails not found");
             if (calories == null) Log.e("FavoriteAdapter", "tvWorkoutCalories not found");

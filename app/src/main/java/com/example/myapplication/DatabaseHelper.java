@@ -2,24 +2,28 @@ package com.example.myapplication;
 
 import android.content.ContentValues;
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
 import java.util.ArrayList;
 import java.util.List;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.Locale;
 
 public class DatabaseHelper extends SQLiteOpenHelper {
 
     // Database Info
     private static final String DATABASE_NAME = "GymApp.db";
-    private static final int DATABASE_VERSION = 4; // ✅ Tăng version để thêm table favorites
+    private static final int DATABASE_VERSION = 6; // ✅ TĂNG VERSION ĐỂ FORCE RECREATE FAVORITES TABLE
 
     // Table Names
     private static final String TABLE_USERS = "users";
     private static final String TABLE_WORKOUTS = "workouts";
     private static final String TABLE_EXERCISE_INSTRUCTIONS = "exercise_instructions";
-    private static final String TABLE_FAVORITES = "favorites"; // ✅ NEW TABLE
+    private static final String TABLE_FAVORITES = "favorites";
 
     // User Table Columns
     private static final String KEY_ID = "id";
@@ -50,7 +54,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     private static final String INSTRUCTION_IMAGE_NAME = "image_name";
     private static final String INSTRUCTION_DURATION = "duration";
 
-    // ✅ NEW: Favorite Table Columns
+    // Favorite Table Columns
     private static final String FAVORITE_ID = "id";
     private static final String FAVORITE_WORKOUT_ID = "workout_id";
     private static final String FAVORITE_USER_ID = "user_id";
@@ -107,22 +111,40 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                 + "FOREIGN KEY(" + FAVORITE_WORKOUT_ID + ") REFERENCES " + TABLE_WORKOUTS + "(" + WORKOUT_ID + "),"
                 + "UNIQUE(" + FAVORITE_WORKOUT_ID + ", " + FAVORITE_USER_ID + ")"
                 + ")";
+        String CREATE_WORKOUT_SESSIONS_TABLE = "CREATE TABLE workout_sessions (" +
+                "id INTEGER PRIMARY KEY AUTOINCREMENT, " +
+                "user_id TEXT NOT NULL, " +
+                "workout_id INTEGER NOT NULL, " +
+                "workout_title TEXT NOT NULL, " +
+                "calories_burned INTEGER DEFAULT 0, " +
+                "duration_seconds INTEGER DEFAULT 0, " +
+                "exercises_completed INTEGER DEFAULT 0, " +
+                "total_exercises INTEGER DEFAULT 0, " +
+                "completion_percentage INTEGER DEFAULT 0, " +
+                "session_date TEXT NOT NULL, " +
+                "created_at DATETIME DEFAULT CURRENT_TIMESTAMP" +
+                ")";
+        db.execSQL(CREATE_WORKOUT_SESSIONS_TABLE);
+
+
 
         // Thực thi tạo tables
         db.execSQL(CREATE_USERS_TABLE);
         db.execSQL(CREATE_WORKOUTS_TABLE);
         db.execSQL(CREATE_INSTRUCTIONS_TABLE);
-        db.execSQL(CREATE_FAVORITES_TABLE); // ✅ Tạo table favorites
+        db.execSQL(CREATE_FAVORITES_TABLE);
 
         insertSampleWorkouts(db);
 
-        Log.d("DatabaseHelper", "Database tables created");
+        Log.d("DatabaseHelper", "Database tables created with version " + DATABASE_VERSION);
     }
+
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
+        Log.d("DatabaseHelper", "Upgrading database from version " + oldVersion + " to " + newVersion);
+
         if (oldVersion < 2) {
-            // Thêm bảng workouts nếu upgrade từ version 1
             String CREATE_WORKOUTS_TABLE = "CREATE TABLE IF NOT EXISTS " + TABLE_WORKOUTS + "("
                     + WORKOUT_ID + " INTEGER PRIMARY KEY AUTOINCREMENT,"
                     + WORKOUT_TITLE + " TEXT NOT NULL,"
@@ -139,9 +161,9 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
             db.execSQL(CREATE_WORKOUTS_TABLE);
             insertSampleWorkouts(db);
+            Log.d("DatabaseHelper", "Upgraded to version 2: Added workouts table");
         }
 
-        // Upgrade to version 3 - Add exercise_instructions table
         if (oldVersion < 3) {
             String CREATE_INSTRUCTIONS_TABLE = "CREATE TABLE IF NOT EXISTS " + TABLE_EXERCISE_INSTRUCTIONS + "("
                     + INSTRUCTION_ID + " INTEGER PRIMARY KEY AUTOINCREMENT,"
@@ -155,10 +177,9 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                     + ")";
 
             db.execSQL(CREATE_INSTRUCTIONS_TABLE);
-            Log.d("DatabaseHelper", "Exercise instructions table added in upgrade");
+            Log.d("DatabaseHelper", "Upgraded to version 3: Added exercise instructions table");
         }
 
-        // ✅ NEW: Upgrade to version 4 - Add favorites table
         if (oldVersion < 4) {
             String CREATE_FAVORITES_TABLE = "CREATE TABLE IF NOT EXISTS " + TABLE_FAVORITES + "("
                     + FAVORITE_ID + " INTEGER PRIMARY KEY AUTOINCREMENT,"
@@ -170,7 +191,45 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                     + ")";
 
             db.execSQL(CREATE_FAVORITES_TABLE);
-            Log.d("DatabaseHelper", "Favorites table added in upgrade");
+            Log.d("DatabaseHelper", "Upgraded to version 4: Added favorites table");
+        }
+
+        if (oldVersion < 5) {
+            db.execSQL("DROP TABLE IF EXISTS " + TABLE_FAVORITES);
+            String CREATE_FAVORITES_TABLE = "CREATE TABLE " + TABLE_FAVORITES + "("
+                    + FAVORITE_ID + " INTEGER PRIMARY KEY AUTOINCREMENT,"
+                    + FAVORITE_WORKOUT_ID + " INTEGER,"
+                    + FAVORITE_USER_ID + " TEXT,"
+                    + FAVORITE_ADDED_AT + " DATETIME DEFAULT CURRENT_TIMESTAMP,"
+                    + "FOREIGN KEY(" + FAVORITE_WORKOUT_ID + ") REFERENCES " + TABLE_WORKOUTS + "(" + WORKOUT_ID + "),"
+                    + "UNIQUE(" + FAVORITE_WORKOUT_ID + ", " + FAVORITE_USER_ID + ")"
+                    + ")";
+            db.execSQL(CREATE_FAVORITES_TABLE);
+            Log.d("DatabaseHelper", "Upgraded to version 5: Favorites table recreated");
+        }
+
+        // ✅ NEW: Add workout_sessions table for tracking
+        if (oldVersion < 6) {
+            String CREATE_WORKOUT_SESSIONS_TABLE = "CREATE TABLE IF NOT EXISTS workout_sessions (" +
+                    "id INTEGER PRIMARY KEY AUTOINCREMENT, " +
+                    "user_id TEXT NOT NULL, " +
+                    "workout_id INTEGER NOT NULL, " +
+                    "workout_title TEXT NOT NULL, " +
+                    "calories_burned INTEGER DEFAULT 0, " +
+                    "duration_seconds INTEGER DEFAULT 0, " +
+                    "exercises_completed INTEGER DEFAULT 0, " +
+                    "total_exercises INTEGER DEFAULT 0, " +
+                    "completion_percentage INTEGER DEFAULT 0, " +
+                    "session_date TEXT NOT NULL, " +
+                    "created_at DATETIME DEFAULT CURRENT_TIMESTAMP" +
+                    ")";
+
+            try {
+                db.execSQL(CREATE_WORKOUT_SESSIONS_TABLE);
+                Log.d("DatabaseHelper", "Upgraded to version 6: Added workout_sessions table");
+            } catch (Exception e) {
+                Log.e("DatabaseHelper", "❌ Error creating workout_sessions table: " + e.getMessage(), e);
+            }
         }
     }
 
@@ -229,6 +288,72 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         db.insert(TABLE_WORKOUTS, null, twist);
 
         Log.d("DatabaseHelper", "Sample workouts inserted");
+    }
+
+    // ================== ✅ NEW: USER SESSION METHODS ==================
+
+    // ✅ Lưu user session khi login
+    public static void saveUserSession(Context context, String userId, String username, String email) {
+        SharedPreferences prefs = context.getSharedPreferences("UserPrefs", Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = prefs.edit();
+
+        // ✅ Convert string userId thành int và lưu
+        try {
+            int userIdInt = Integer.parseInt(userId);
+            editor.putInt("user_id", userIdInt);
+        } catch (NumberFormatException e) {
+            Log.e("DatabaseHelper", "❌ Invalid user ID: " + userId);
+            editor.putInt("user_id", -1);
+        }
+
+        editor.putString("username", username);
+        editor.putString("email", email);
+        editor.putBoolean("is_logged_in", true);
+
+        editor.apply();
+
+        Log.d("DatabaseHelper", "✅ User session saved: ID=" + userId + ", Username=" + username);
+    }
+
+    // ✅ SỬA getCurrentUserId để consistent với int
+    public static String getCurrentUserId(Context context) {
+        SharedPreferences prefs = context.getSharedPreferences("UserPrefs", Context.MODE_PRIVATE);
+        int userId = prefs.getInt("user_id", -1);
+
+        if (userId == -1) {
+            Log.w("DatabaseHelper", "⚠️ No user session found");
+            return "";
+        }
+
+        return String.valueOf(userId);
+    }
+
+    // ✅ Lấy username hiện tại
+    public static String getCurrentUsername(Context context) {
+        SharedPreferences prefs = context.getSharedPreferences("UserPrefs", Context.MODE_PRIVATE);
+        return prefs.getString("username", "User");
+    }
+
+    // ✅ Lấy email hiện tại
+    public static String getCurrentEmail(Context context) {
+        SharedPreferences prefs = context.getSharedPreferences("UserPrefs", Context.MODE_PRIVATE);
+        return prefs.getString("email", "");
+    }
+
+    // ✅ Kiểm tra user đã login chưa
+    public static boolean isLoggedIn(Context context) {
+        SharedPreferences prefs = context.getSharedPreferences("UserPrefs", Context.MODE_PRIVATE);
+        return prefs.getBoolean("is_logged_in", false);
+    }
+
+    // ✅ Clear session khi logout
+    public static void clearUserSession(Context context) {
+        SharedPreferences prefs = context.getSharedPreferences("UserPrefs", Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = prefs.edit();
+        editor.clear();
+        editor.apply();
+
+        Log.d("DatabaseHelper", "✅ User session cleared");
     }
 
     // ================== USER METHODS ==================
@@ -366,7 +491,6 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         return userList;
     }
 
-    // Đếm số lượng users
     public int getUserCount() {
         SQLiteDatabase db = this.getReadableDatabase();
         String countQuery = "SELECT COUNT(*) FROM " + TABLE_USERS;
@@ -381,7 +505,37 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         db.close();
         return count;
     }
+    // ✅ THÊM method này vào DatabaseHelper
+    public User getUserByUsername(String username) {
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor cursor = null;
+        User user = null;
 
+        try {
+            // ✅ FIX: Dùng TABLE_USERS và KEY_USERNAME
+            String query = "SELECT * FROM " + TABLE_USERS + " WHERE " + KEY_USERNAME + " = ?";
+            cursor = db.rawQuery(query, new String[]{username});
+
+            if (cursor.moveToFirst()) {
+                user = new User();
+                // ✅ FIX: Dùng đúng constant names
+                user.setId(cursor.getInt(cursor.getColumnIndexOrThrow(KEY_ID)));
+                user.setUsername(cursor.getString(cursor.getColumnIndexOrThrow(KEY_USERNAME)));
+                user.setEmail(cursor.getString(cursor.getColumnIndexOrThrow(KEY_EMAIL)));
+
+                Log.d("DatabaseHelper", "✅ Found user: " + username + " with ID: " + user.getId());
+            } else {
+                Log.w("DatabaseHelper", "⚠️ User not found: " + username);
+            }
+        } catch (Exception e) {
+            Log.e("DatabaseHelper", "❌ Error getting user by username: " + e.getMessage(), e);
+        } finally {
+            if (cursor != null) cursor.close();
+            db.close();
+        }
+
+        return user;
+    }
     // Method helper để lấy thông tin user theo ID
     public User getUserById(int userId) {
         SQLiteDatabase db = this.getReadableDatabase();
@@ -625,11 +779,11 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         SQLiteDatabase db = this.getWritableDatabase();
 
         try {
-            // Xóa instructions trực tiếp trong cùng database connection
+            // Xóa instructions trước
             db.delete(TABLE_EXERCISE_INSTRUCTIONS, INSTRUCTION_WORKOUT_ID + " = ?",
                     new String[]{String.valueOf(workoutId)});
 
-            // ✅ Xóa favorites liên quan
+            // Xóa favorites liên quan
             db.delete(TABLE_FAVORITES, FAVORITE_WORKOUT_ID + " = ?",
                     new String[]{String.valueOf(workoutId)});
 
@@ -651,7 +805,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         }
     }
 
-    // Thêm method debug vào DatabaseHelper
+    // Debug method để kiểm tra workout instructions
     public void debugWorkoutInstructions(int workoutId) {
         SQLiteDatabase db = this.getReadableDatabase();
 
@@ -683,19 +837,6 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             } while (cursor.moveToNext());
         } else {
             Log.d("DatabaseHelper", "❌ NO INSTRUCTIONS FOUND for workout ID " + workoutId);
-
-            // Debug: List all instructions in table
-            String allQuery = "SELECT " + INSTRUCTION_WORKOUT_ID + ", " + INSTRUCTION_TITLE + " FROM " + TABLE_EXERCISE_INSTRUCTIONS;
-            Cursor allCursor = db.rawQuery(allQuery, null);
-            Log.d("DatabaseHelper", "--- ALL INSTRUCTIONS IN DATABASE ---");
-            if (allCursor.moveToFirst()) {
-                do {
-                    int wId = allCursor.getInt(0);
-                    String title = allCursor.getString(1);
-                    Log.d("DatabaseHelper", "WorkoutID: " + wId + ", Title: " + title);
-                } while (allCursor.moveToNext());
-            }
-            allCursor.close();
         }
 
         cursor.close();
@@ -802,11 +943,15 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         return count;
     }
 
-    // ================== ✅ NEW: FAVORITE METHODS ==================
+    // ================== ✅ IMPROVED: FAVORITE METHODS ==================
 
     // Thêm workout vào favorites
     public boolean addToFavorites(int workoutId, String userId) {
         SQLiteDatabase db = this.getWritableDatabase();
+
+        Log.d("DatabaseHelper", "=== ADD TO FAVORITES DEBUG ===");
+        Log.d("DatabaseHelper", "Workout ID: " + workoutId);
+        Log.d("DatabaseHelper", "User ID: '" + userId + "'");
 
         try {
             ContentValues values = new ContentValues();
@@ -814,10 +959,10 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             values.put(FAVORITE_USER_ID, userId);
 
             long id = db.insert(TABLE_FAVORITES, null, values);
-            Log.d("DatabaseHelper", "Added to favorites with ID: " + id);
+            Log.d("DatabaseHelper", "✅ Added to favorites with ID: " + id);
             return id != -1;
         } catch (Exception e) {
-            Log.e("DatabaseHelper", "Error adding to favorites: " + e.getMessage());
+            Log.e("DatabaseHelper", "❌ Error adding to favorites: " + e.getMessage(), e);
             return false;
         } finally {
             if (db != null) {
@@ -830,15 +975,19 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     public boolean removeFromFavorites(int workoutId, String userId) {
         SQLiteDatabase db = this.getWritableDatabase();
 
+        Log.d("DatabaseHelper", "=== REMOVE FROM FAVORITES DEBUG ===");
+        Log.d("DatabaseHelper", "Workout ID: " + workoutId);
+        Log.d("DatabaseHelper", "User ID: '" + userId + "'");
+
         try {
             String whereClause = FAVORITE_WORKOUT_ID + " = ? AND " + FAVORITE_USER_ID + " = ?";
             String[] whereArgs = {String.valueOf(workoutId), userId};
 
             int rowsDeleted = db.delete(TABLE_FAVORITES, whereClause, whereArgs);
-            Log.d("DatabaseHelper", "Removed from favorites, rows affected: " + rowsDeleted);
+            Log.d("DatabaseHelper", "✅ Removed from favorites, rows affected: " + rowsDeleted);
             return rowsDeleted > 0;
         } catch (Exception e) {
-            Log.e("DatabaseHelper", "Error removing from favorites: " + e.getMessage());
+            Log.e("DatabaseHelper", "❌ Error removing from favorites: " + e.getMessage(), e);
             return false;
         } finally {
             if (db != null) {
@@ -861,14 +1010,29 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             int count = cursor.getCount();
             cursor.close();
 
+            Log.d("DatabaseHelper", "isFavorite check - WorkoutID: " + workoutId + ", UserID: '" + userId + "', Result: " + (count > 0));
             return count > 0;
         } catch (Exception e) {
-            Log.e("DatabaseHelper", "Error checking favorite: " + e.getMessage());
+            Log.e("DatabaseHelper", "Error checking favorite: " + e.getMessage(), e);
             return false;
         } finally {
             if (db != null) {
                 db.close();
             }
+        }
+    }
+
+    // Toggle favorite status
+    public boolean toggleFavorite(int workoutId, String userId) {
+        Log.d("DatabaseHelper", "=== TOGGLE FAVORITE ===");
+        Log.d("DatabaseHelper", "Workout ID: " + workoutId + ", User ID: '" + userId + "'");
+
+        if (isFavorite(workoutId, userId)) {
+            Log.d("DatabaseHelper", "Currently favorite - removing...");
+            return removeFromFavorites(workoutId, userId);
+        } else {
+            Log.d("DatabaseHelper", "Not favorite - adding...");
+            return addToFavorites(workoutId, userId);
         }
     }
 
@@ -919,7 +1083,8 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
         return favoriteWorkouts;
     }
-    // Thêm method này vào DatabaseHelper class
+
+    // Test favorites table functionality
     public void testFavoritesTable() {
         SQLiteDatabase db = this.getReadableDatabase();
         try {
@@ -939,7 +1104,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             } else {
                 Log.e("DatabaseHelper", "❌ Favorites table NOT found - creating it now");
                 // Force create the table
-                onUpgrade(db, 3, 4);
+                onUpgrade(db, 4, 5);
             }
             cursor.close();
         } catch (Exception e) {
@@ -951,6 +1116,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             }
         }
     }
+
     // Xóa tất cả favorites của user
     public boolean clearAllFavorites(String userId) {
         SQLiteDatabase db = this.getWritableDatabase();
@@ -997,7 +1163,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         }
     }
 
-    // ✅ Lấy các favorite workout IDs của user (hữu ích cho UI)
+    // Lấy các favorite workout IDs của user (hữu ích cho UI)
     public List<Integer> getFavoriteWorkoutIds(String userId) {
         List<Integer> favoriteIds = new ArrayList<>();
         SQLiteDatabase db = this.getReadableDatabase();
@@ -1026,13 +1192,13 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         return favoriteIds;
     }
 
-    // ✅ Lấy thống kê favorites cho user
-    public String getFavoriteStats(String userId) {
+    // Lấy thống kê favorites cho user với details
+    public FavoriteStats getFavoriteStatsDetailed(String userId) {
         SQLiteDatabase db = this.getReadableDatabase();
 
         try {
             String query = "SELECT COUNT(*) as total_favorites, " +
-                    "SUM(w." + WORKOUT_CALORIES + ") as total_calories, " +
+                    "COALESCE(SUM(w." + WORKOUT_CALORIES + "), 0) as total_calories, " +
                     "COUNT(DISTINCT w." + WORKOUT_TYPE + ") as unique_types " +
                     "FROM " + TABLE_FAVORITES + " f " +
                     "INNER JOIN " + TABLE_WORKOUTS + " w ON f." + FAVORITE_WORKOUT_ID + " = w." + WORKOUT_ID + " " +
@@ -1040,24 +1206,228 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
             Cursor cursor = db.rawQuery(query, new String[]{userId});
 
-            String stats = "0 favorites, 0 calories, 0 types";
+            FavoriteStats stats = new FavoriteStats();
             if (cursor.moveToFirst()) {
-                int totalFavorites = cursor.getInt(0);
-                int totalCalories = cursor.getInt(1);
-                int uniqueTypes = cursor.getInt(2);
-
-                stats = totalFavorites + " favorites, " + totalCalories + " calories, " + uniqueTypes + " types";
+                stats.totalFavorites = cursor.getInt(0);
+                stats.totalCalories = cursor.getInt(1);
+                stats.uniqueTypes = cursor.getInt(2);
             }
 
             cursor.close();
             return stats;
         } catch (Exception e) {
             Log.e("DatabaseHelper", "Error getting favorite stats: " + e.getMessage());
-            return "Error loading stats";
+            return new FavoriteStats(); // Return empty stats
         } finally {
             if (db != null) {
                 db.close();
             }
         }
     }
+
+    // Lấy thống kê favorites cho user (string format)
+    public String getFavoriteStats(String userId) {
+        FavoriteStats stats = getFavoriteStatsDetailed(userId);
+        return stats.totalFavorites + " favorites, " + stats.totalCalories + " calories, " + stats.uniqueTypes + " types";
+    }
+
+    // ✅ NEW: Helper class cho favorite stats
+    public static class FavoriteStats {
+        public int totalFavorites = 0;
+        public int totalCalories = 0;
+        public int uniqueTypes = 0;
+    }
+    public static class DailyStats {
+        public int totalCalories = 0;
+        public int totalDurationSeconds = 0;
+        public int totalWorkouts = 0;
+
+        public DailyStats() {
+            // Constructor mặc định
+        }
+
+        public DailyStats(int calories, int duration, int workouts) {
+            this.totalCalories = calories;
+            this.totalDurationSeconds = duration;
+            this.totalWorkouts = workouts;
+        }
+    }
+    private String formatDuration(int seconds) {
+        if (seconds <= 0) return "0min";
+
+        int minutes = seconds / 60;
+        int secs = seconds % 60;
+
+        if (minutes > 0 && secs > 0) {
+            return String.format("%dm %ds", minutes, secs);
+        } else if (minutes > 0) {
+            return String.format("%dm", minutes);
+        } else {
+            return String.format("%ds", secs);
+        }
+    }
+
+    private String formatTotalDuration(int totalSeconds) {
+        if (totalSeconds <= 0) return "0min";
+
+        int days = totalSeconds / (24 * 3600);
+        int hours = (totalSeconds % (24 * 3600)) / 3600;
+        int minutes = (totalSeconds % 3600) / 60;
+
+        if (days > 0) {
+            if (hours > 0) {
+                return String.format("%dd %dh", days, hours);
+            } else {
+                return String.format("%dd", days);
+            }
+        } else if (hours > 0) {
+            if (minutes > 0) {
+                return String.format("%dh %dm", hours, minutes);
+            } else {
+                return String.format("%dh", hours);
+            }
+        } else if (minutes > 0) {
+            return String.format("%dm", minutes);
+        } else {
+            return "1m"; // Minimum display
+        }
+    }
+    public DailyStats getDailyStats(String userId, String date) {
+        SQLiteDatabase db = this.getReadableDatabase();
+        DailyStats stats = new DailyStats();
+
+        // Get today's stats
+        String query = "SELECT " +
+                "SUM(calories_burned) as total_calories, " +
+                "SUM(duration_seconds) as total_duration, " +
+                "COUNT(*) as total_workouts " +
+                "FROM workout_sessions " +
+                "WHERE user_id = ? AND session_date = ?";
+
+        Cursor cursor = null;
+        try {
+            cursor = db.rawQuery(query, new String[]{userId, date});
+
+            if (cursor.moveToFirst()) {
+                stats.totalCalories = cursor.getInt(cursor.getColumnIndexOrThrow("total_calories"));
+                stats.totalDurationSeconds = cursor.getInt(cursor.getColumnIndexOrThrow("total_duration"));
+                stats.totalWorkouts = cursor.getInt(cursor.getColumnIndexOrThrow("total_workouts"));
+
+                Log.d("DatabaseHelper", "📊 Daily stats for " + date + ": " +
+                        stats.totalCalories + " cal, " + formatDuration(stats.totalDurationSeconds) +
+                        ", " + stats.totalWorkouts + " workouts");
+            }
+        } catch (Exception e) {
+            Log.e("DatabaseHelper", "❌ Error getting daily stats: " + e.getMessage(), e);
+        } finally {
+            if (cursor != null) cursor.close();
+            db.close();
+        }
+
+        return stats;
+    }
+
+    // ✅ THÊM method để get total workout time
+    public String getTotalWorkoutTime(String userId) {
+        SQLiteDatabase db = this.getReadableDatabase();
+        String totalTime = "0min";
+
+        String query = "SELECT SUM(duration_seconds) as total_seconds FROM workout_sessions WHERE user_id = ?";
+
+        Cursor cursor = null;
+        try {
+            cursor = db.rawQuery(query, new String[]{userId});
+
+            if (cursor.moveToFirst()) {
+                int totalSeconds = cursor.getInt(cursor.getColumnIndexOrThrow("total_seconds"));
+                totalTime = formatTotalDuration(totalSeconds);
+
+                Log.d("DatabaseHelper", "📊 Total workout time: " + totalTime);
+            }
+        } catch (Exception e) {
+            Log.e("DatabaseHelper", "❌ Error getting total workout time: " + e.getMessage(), e);
+        } finally {
+            if (cursor != null) cursor.close();
+            db.close();
+        }
+
+        return totalTime;
+    }
+    // ✅ THÊM method này vào DatabaseHelper
+    public boolean saveWorkoutSession(String userId, int workoutId, String workoutTitle,
+                                      int caloriesBurned, int durationSeconds,
+                                      int exercisesCompleted, int totalExercises) {
+        SQLiteDatabase db = null;
+        try {
+            db = this.getWritableDatabase();
+            ContentValues values = new ContentValues();
+
+            String today = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(new Date());
+            int completionPercentage = totalExercises > 0 ? (exercisesCompleted * 100) / totalExercises : 0;
+
+            values.put("user_id", userId);
+            values.put("workout_id", workoutId);
+            values.put("workout_title", workoutTitle);
+            values.put("calories_burned", caloriesBurned);
+            values.put("duration_seconds", durationSeconds);
+            values.put("exercises_completed", exercisesCompleted);
+            values.put("total_exercises", totalExercises);
+            values.put("completion_percentage", completionPercentage);
+            values.put("session_date", today);
+
+            long result = db.insert("workout_sessions", null, values);
+
+            if (result != -1) {
+                Log.d("DatabaseHelper", "✅ Workout session saved - ID: " + result);
+                Log.d("DatabaseHelper", "📊 Stats: " + caloriesBurned + " calories, " +
+                        formatDuration(durationSeconds) + ", " + exercisesCompleted + "/" + totalExercises + " exercises");
+                return true;
+            } else {
+                Log.e("DatabaseHelper", "❌ Failed to save workout session");
+                return false;
+            }
+        } catch (Exception e) {
+            Log.e("DatabaseHelper", "❌ Error saving workout session: " + e.getMessage(), e);
+            return false;
+        } finally {
+            if (db != null) {
+                try {
+                    db.close();
+                } catch (Exception e) {
+                    Log.e("DatabaseHelper", "Error closing database: " + e.getMessage());
+                }
+            }
+        }
+    }
+    // ✅ SỬA method getLastLoggedInUser() - dùng đúng constant names
+    public User getLastLoggedInUser() {
+        SQLiteDatabase db = this.getReadableDatabase();
+        User user = null;
+
+        // ✅ FIX: Dùng KEY_ID và KEY_USERNAME thay vì USER_ID và USER_USERNAME
+        String query = "SELECT * FROM " + TABLE_USERS + " ORDER BY " + KEY_ID + " DESC LIMIT 1";
+        Cursor cursor = null;
+
+        try {
+            cursor = db.rawQuery(query, null);
+
+            if (cursor.moveToFirst()) {
+                user = new User();
+                // ✅ FIX: Dùng đúng constant names
+                user.setId(cursor.getInt(cursor.getColumnIndexOrThrow(KEY_ID)));
+                user.setUsername(cursor.getString(cursor.getColumnIndexOrThrow(KEY_USERNAME)));
+                user.setEmail(cursor.getString(cursor.getColumnIndexOrThrow(KEY_EMAIL)));
+
+                Log.d("DatabaseHelper", "✅ Found last user: " + user.getUsername());
+            }
+        } catch (Exception e) {
+            Log.e("DatabaseHelper", "❌ Error getting last user: " + e.getMessage(), e);
+        } finally {
+            if (cursor != null) cursor.close();
+            db.close();
+        }
+
+        return user;
+    }
+
 }

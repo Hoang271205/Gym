@@ -3,59 +3,192 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#000000"
+    android:background="@drawable/workout_background"
     android:padding="24dp">
 
-    <Chronometer
-        android:id="@+id/chronometerWorkoutTimer"
-        android:layout_width="wrap_content"
+    <!-- Header với timer tổng -->
+    <LinearLayout
+        android:id="@+id/llHeader"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="40dp"
-        android:textColor="#FFFFFF"
-        android:textSize="48sp" />
-
-    <TextView
-        android:id="@+id/tvCurrentExercise"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/chronometerWorkoutTimer"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="24dp"
-        android:text="Current Exercise"
-        android:textColor="#FFFFFF"
-        android:textSize="22sp"
-        android:gravity="center"/>
-
-    <LinearLayout
-        android:id="@+id/llWorkoutProgressInfo"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:layout_centerInParent="true"
-        android:gravity="center">
-
-        <ProgressBar
-            android:id="@+id/progressLoading"
-            android:layout_width="64dp"
-            android:layout_height="64dp"
-            android:indeterminate="true"
-            android:layout_gravity="center" />
+        android:gravity="center"
+        android:layout_marginTop="20dp">
 
         <TextView
-            android:id="@+id/tvInProgress"
+            android:id="@+id/tvWorkoutTitle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Keep doing..."
+            android:text="Push-up Workout"
             android:textColor="#FFFFFF"
-            android:textSize="20sp"
-            android:layout_marginTop="16dp"
-            android:gravity="center"/>
+            android:textSize="24sp"
+            android:textStyle="bold"
+            android:layout_marginBottom="12dp"/>
+
+        <Chronometer
+            android:id="@+id/chronometerWorkoutTimer"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="#FF6600"
+            android:textSize="32sp"
+            android:textStyle="bold"/>
+
+        <TextView
+            android:id="@+id/tvTotalTime"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Total Time"
+            android:textColor="#CCCCCC"
+            android:textSize="14sp"
+            android:layout_marginTop="4dp"/>
     </LinearLayout>
 
-    <!-- Các nút điều khiển -->
+    <!-- Progress indicator -->
     <LinearLayout
+        android:id="@+id/llProgress"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/llHeader"
+        android:orientation="vertical"
+        android:layout_marginTop="24dp"
+        android:layout_marginBottom="24dp">
+
+        <TextView
+            android:id="@+id/tvProgressText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Exercise 1 of 4"
+            android:textColor="#FFFFFF"
+            android:textSize="16sp"
+            android:layout_gravity="center"
+            android:layout_marginBottom="8dp"/>
+
+        <ProgressBar
+            android:id="@+id/progressBarWorkout"
+            style="?android:attr/progressBarStyleHorizontal"
+            android:layout_width="match_parent"
+            android:layout_height="8dp"
+            android:max="100"
+            android:progress="25"
+            android:progressTint="#FF6600"
+            android:progressBackgroundTint="#333333"/>
+    </LinearLayout>
+
+    <!-- Exercise card container -->
+    <ScrollView
+        android:id="@+id/scrollViewExercises"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/llProgress"
+        android:layout_above="@id/llCurrentExercise"
+        android:layout_marginBottom="16dp">
+
+        <LinearLayout
+            android:id="@+id/llExerciseCards"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:gravity="center">
+
+            <!-- Exercise cards sẽ được add động -->
+
+        </LinearLayout>
+    </ScrollView>
+
+    <!-- Current exercise info -->
+    <LinearLayout
+        android:id="@+id/llCurrentExercise"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_above="@id/llTimer"
+        android:orientation="vertical"
+        android:gravity="center"
+        android:background="@drawable/current_exercise_bg"
+        android:padding="20dp"
+        android:layout_marginBottom="16dp">
+
+        <TextView
+            android:id="@+id/tvCurrentExercise"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Push-ups"
+            android:textColor="#FFFFFF"
+            android:textSize="28sp"
+            android:textStyle="bold"
+            android:gravity="center"/>
+
+        <TextView
+            android:id="@+id/tvCurrentExerciseDetails"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="3 sets of 15 reps"
+            android:textColor="#CCCCCC"
+            android:textSize="16sp"
+            android:layout_marginTop="4dp"/>
+
+        <TextView
+            android:id="@+id/tvPhaseStatus"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="WORK TIME"
+            android:textColor="#FF6600"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            android:layout_marginTop="8dp"/>
+    </LinearLayout>
+
+    <!-- Timer cho exercise hiện tại -->
+    <LinearLayout
+        android:id="@+id/llTimer"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_above="@id/llControls"
+        android:orientation="vertical"
+        android:gravity="center"
+        android:layout_marginBottom="24dp">
+
+        <!-- Circular Progress -->
+        <RelativeLayout
+            android:layout_width="200dp"
+            android:layout_height="200dp"
+            android:layout_gravity="center">
+
+            <ProgressBar
+                android:id="@+id/progressCircular"
+                style="?android:attr/progressBarStyleHorizontal"
+                android:layout_width="200dp"
+                android:layout_height="200dp"
+                android:layout_centerInParent="true"
+                android:max="100"
+                android:progress="75"
+                android:progressDrawable="@drawable/circular_progress"
+                android:rotation="-90"/>
+
+            <TextView
+                android:id="@+id/tvExerciseTimer"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:text="00:23"
+                android:textColor="#FFFFFF"
+                android:textSize="36sp"
+                android:textStyle="bold"/>
+        </RelativeLayout>
+
+        <TextView
+            android:id="@+id/tvTimerStatus"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Keep going!"
+            android:textColor="#FFFFFF"
+            android:textSize="18sp"
+            android:layout_marginTop="16dp"/>
+    </LinearLayout>
+
+    <!-- Controls -->
+    <LinearLayout
+        android:id="@+id/llControls"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
@@ -65,25 +198,43 @@
         <Button
             android:id="@+id/btnPauseResumeWorkout"
             android:layout_width="0dp"
-            android:layout_height="wrap_content"
+            android:layout_height="60dp"
             android:layout_weight="1"
-            android:text="Stop"
+            android:text="PAUSE"
             android:backgroundTint="#FF6600"
-            android:textColor="#000000"
+            android:textColor="#FFFFFF"
             android:textStyle="bold"
-            android:padding="12dp"
-            android:layout_marginEnd="8dp"/>
+            android:textSize="16sp"
+            android:layout_marginEnd="8dp"
+            android:drawableLeft="@drawable/ic_pause"
+            android:drawablePadding="8dp"/>
+
+        <Button
+            android:id="@+id/btnSkipExercise"
+            android:layout_width="0dp"
+            android:layout_height="60dp"
+            android:layout_weight="1"
+            android:text="SKIP"
+            android:backgroundTint="#666666"
+            android:textColor="#FFFFFF"
+            android:textStyle="bold"
+            android:textSize="16sp"
+            android:layout_marginHorizontal="4dp"
+            android:drawableLeft="@drawable/ic_skip"
+            android:drawablePadding="8dp"/>
 
         <Button
             android:id="@+id/btnEndWorkout"
             android:layout_width="0dp"
-            android:layout_height="wrap_content"
+            android:layout_height="60dp"
             android:layout_weight="1"
-            android:text="End"
-            android:backgroundTint="#FF6600"
+            android:text="END"
+            android:backgroundTint="#FF4444"
             android:textColor="#FFFFFF"
             android:textStyle="bold"
-            android:padding="12dp"
-            android:layout_marginStart="8dp"/>
+            android:textSize="16sp"
+            android:layout_marginStart="8dp"
+            android:drawableLeft="@drawable/ic_stop"
+            android:drawablePadding="8dp"/>
     </LinearLayout>
 </RelativeLayout>

@@ -1,6 +1,9 @@
 package com.example.myapplication;
 
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
@@ -13,7 +16,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
-
+import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.GridLayoutManager;
@@ -34,12 +37,16 @@ public class FavoriteActivity extends AppCompatActivity {
     private TextView tvTotalFavorites, tvTotalCalories, tvWorkoutTypes;
     private LinearLayout llEmptyState;
     private EditText etSearch;
-    private String currentUserId = "user123"; // Default fallback
+
+    // ✅ UPDATED: Better user ID management
+    private String currentUserId;
 
     // User info
     private String currentUsername = "Guest";
     private String currentEmail = "";
     private int currentUserIdInt = -1;
+
+    private BroadcastReceiver favoritesReceiver;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -58,12 +65,13 @@ public class FavoriteActivity extends AppCompatActivity {
             // Test database connection
             testDatabaseConnection();
 
-            // Load user info from intent
+            // ✅ Load user info FIRST
             loadUserInfo();
 
             initViews();
             setupClickListeners();
             setupBottomNavigation();
+            setupFavoritesReceiver(); // ✅ NEW: Setup broadcast receiver
             loadFavoriteWorkouts();
 
             Log.d("FavoriteActivity", "✅ FavoriteActivity onCreate completed successfully");
@@ -73,13 +81,25 @@ public class FavoriteActivity extends AppCompatActivity {
             Toast.makeText(this, "Error loading favorites: " + e.getMessage(), Toast.LENGTH_LONG).show();
 
             // Navigate back to MainActivity instead of crashing
-            Intent intent = new Intent(this, MainActivity.class);
-            intent.putExtra("user_id", currentUserIdInt);
-            intent.putExtra("username", currentUsername);
-            intent.putExtra("email", currentEmail);
-            startActivity(intent);
-            finish();
+            navigateToMainActivity();
         }
+    }
+
+    // ✅ NEW: Setup broadcast receiver để refresh khi có thay đổi favorites
+    private void setupFavoritesReceiver() {
+        favoritesReceiver = new BroadcastReceiver() {
+            @Override
+            public void onReceive(Context context, Intent intent) {
+                Log.d("FavoriteActivity", "📡 Received favorites refresh broadcast");
+                loadFavoriteWorkouts();
+            }
+        };
+
+        IntentFilter filter = new IntentFilter("com.example.myapplication.ACTION_REFRESH_FAVORITES");
+
+        LocalBroadcastManager.getInstance(this).registerReceiver(favoritesReceiver, filter);
+
+        Log.d("FavoriteActivity", "✅ Local favorites receiver registered");
     }
 
     // Test database connection
@@ -97,7 +117,7 @@ public class FavoriteActivity extends AppCompatActivity {
         }
     }
 
-    // Load user info from intent with better error handling
+    // ✅ UPDATED: Enhanced user info loading
     private void loadUserInfo() {
         try {
             Intent intent = getIntent();
@@ -106,33 +126,53 @@ public class FavoriteActivity extends AppCompatActivity {
                 currentUsername = intent.getStringExtra("username");
                 currentEmail = intent.getStringExtra("email");
 
-                // Update currentUserId for database queries
+                // ✅ Convert to String for database operations
                 if (currentUserIdInt != -1) {
                     currentUserId = String.valueOf(currentUserIdInt);
+                } else {
+                    // ✅ Try to get from intent as string
+                    currentUserId = intent.getStringExtra("user_id");
                 }
 
-                Log.d("FavoriteActivity", "✅ User loaded: " + currentUsername + " (ID: " + currentUserId + ")");
-            } else {
-                Log.w("FavoriteActivity", "⚠️ No intent data found, using defaults");
+                Log.d("FavoriteActivity", "📤 Intent data - UserID: " + currentUserIdInt + ", Username: " + currentUsername);
             }
 
-            // Validate user data
+            // ✅ Fallback to DatabaseHelper session if no intent data
+            if (currentUserId == null || currentUserId.isEmpty() || currentUserId.equals("-1")) {
+                currentUserId = DatabaseHelper.getCurrentUserId(this);
+                currentUsername = DatabaseHelper.getCurrentUsername(this);
+                currentEmail = DatabaseHelper.getCurrentEmail(this);
+
+                Log.d("FavoriteActivity", "📱 Using session data - UserID: " + currentUserId + ", Username: " + currentUsername);
+            }
+
+            // ✅ Final validation and fallback
+            if (currentUserId == null || currentUserId.isEmpty()) {
+                Log.w("FavoriteActivity", "⚠️ No user ID found, using fallback");
+                currentUserId = "HienTruongTHMH"; // Your login name as fallback
+                currentUsername = "HienTruongTHMH";
+            }
+
             if (currentUsername == null || currentUsername.trim().isEmpty()) {
                 currentUsername = "Guest";
-                Log.w("FavoriteActivity", "⚠️ Username was null/empty, set to Guest");
             }
 
             if (currentEmail == null) {
                 currentEmail = "";
-                Log.w("FavoriteActivity", "⚠️ Email was null, set to empty string");
             }
+
+            Log.d("FavoriteActivity", "✅ Final user data - ID: '" + currentUserId + "', Username: '" + currentUsername + "'");
 
         } catch (Exception e) {
             Log.e("FavoriteActivity", "❌ Error loading user info: " + e.getMessage(), e);
-            // Set safe defaults
-            currentUsername = "Guest";
+
+            // ✅ Safe fallback
+            currentUserId = "HienTruongTHMH";
+            currentUsername = "HienTruongTHMH";
             currentEmail = "";
-            currentUserId = "user123";
+            currentUserIdInt = 1;
+
+            Log.d("FavoriteActivity", "🔧 Using safe fallback user data");
         }
     }
 
@@ -216,19 +256,27 @@ public class FavoriteActivity extends AppCompatActivity {
         try {
             View btnBrowseWorkouts = findViewById(R.id.btnBrowseWorkouts);
             if (btnBrowseWorkouts != null) {
-                btnBrowseWorkouts.setOnClickListener(v -> {
-                    Intent intent = new Intent(this, MainActivity.class);
-                    intent.putExtra("user_id", currentUserIdInt);
-                    intent.putExtra("username", currentUsername);
-                    intent.putExtra("email", currentEmail);
-                    startActivity(intent);
-                });
+                btnBrowseWorkouts.setOnClickListener(v -> navigateToMainActivity());
                 Log.d("FavoriteActivity", "✅ Browse workouts button initialized");
             } else {
                 Log.w("FavoriteActivity", "⚠️ btnBrowseWorkouts not found");
             }
         } catch (Exception e) {
             Log.e("FavoriteActivity", "❌ Error in setupClickListeners: " + e.getMessage(), e);
+        }
+    }
+
+    // ✅ NEW: Helper method để navigate to MainActivity
+    private void navigateToMainActivity() {
+        try {
+            Intent intent = new Intent(this, MainActivity.class);
+            intent.putExtra("user_id", currentUserIdInt);
+            intent.putExtra("username", currentUsername);
+            intent.putExtra("email", currentEmail);
+            startActivity(intent);
+            finish();
+        } catch (Exception e) {
+            Log.e("FavoriteActivity", "Error navigating to MainActivity: " + e.getMessage(), e);
         }
     }
 
@@ -243,12 +291,7 @@ public class FavoriteActivity extends AppCompatActivity {
                 navHome.setOnClickListener(v -> {
                     try {
                         Log.d("FavoriteActivity", "Navigating to Home");
-                        Intent intent = new Intent(this, MainActivity.class);
-                        intent.putExtra("user_id", currentUserIdInt);
-                        intent.putExtra("username", currentUsername);
-                        intent.putExtra("email", currentEmail);
-                        startActivity(intent);
-                        finish();
+                        navigateToMainActivity();
                     } catch (Exception e) {
                         Log.e("FavoriteActivity", "Error navigating to home: " + e.getMessage(), e);
                     }
@@ -298,7 +341,15 @@ public class FavoriteActivity extends AppCompatActivity {
 
     private void loadFavoriteWorkouts() {
         try {
-            Log.d("FavoriteActivity", "🔄 Loading favorite workouts for user: " + currentUserId);
+            Log.d("FavoriteActivity", "🔄 Loading favorite workouts for user: '" + currentUserId + "'");
+
+            // ✅ Validate user ID before proceeding
+            if (currentUserId == null || currentUserId.trim().isEmpty()) {
+                Log.e("FavoriteActivity", "❌ Invalid user ID, cannot load favorites");
+                favoriteWorkoutCards = new ArrayList<>();
+                updateStatsUI();
+                return;
+            }
 
             List<Workout> favoriteWorkouts = databaseHelper.getFavoriteWorkouts(currentUserId);
             favoriteWorkoutCards = new ArrayList<>();
@@ -312,6 +363,8 @@ public class FavoriteActivity extends AppCompatActivity {
 
                     WorkoutCard workoutCard = WorkoutCard.fromWorkout(workout, bitmap, activityClass);
                     favoriteWorkoutCards.add(workoutCard);
+
+                    Log.d("FavoriteActivity", "✅ Processed workout: " + workout.getTitle() + " (ID: " + workout.getId() + ")");
                 } catch (Exception e) {
                     Log.e("FavoriteActivity", "Error processing workout: " + workout.getTitle(), e);
                 }
@@ -321,7 +374,7 @@ public class FavoriteActivity extends AppCompatActivity {
             updateStatsUI();
             updateWorkoutList();
 
-            Log.d("FavoriteActivity", "✅ Favorite workouts loaded successfully");
+            Log.d("FavoriteActivity", "✅ Favorite workouts loaded successfully - " + favoriteWorkoutCards.size() + " cards created");
 
         } catch (Exception e) {
             Log.e("FavoriteActivity", "❌ Error loading favorite workouts: " + e.getMessage(), e);
@@ -369,13 +422,14 @@ public class FavoriteActivity extends AppCompatActivity {
                 }
             }
 
-            Log.d("FavoriteActivity", "✅ Stats UI updated - " + totalFavorites + " favorites, " + totalCalories + " calories");
+            Log.d("FavoriteActivity", "✅ Stats UI updated - " + totalFavorites + " favorites, " + totalCalories + " calories, " + workoutTypes.size() + " types");
 
         } catch (Exception e) {
             Log.e("FavoriteActivity", "❌ Error updating stats UI: " + e.getMessage(), e);
         }
     }
 
+    // ✅ UPDATED: Pass user ID to adapter
     private void updateWorkoutList() {
         try {
             if (favoriteWorkoutCards == null || favoriteWorkoutCards.isEmpty()) {
@@ -388,10 +442,11 @@ public class FavoriteActivity extends AppCompatActivity {
                 return;
             }
 
-            adapter = new FavoriteWorkoutCardAdapter(favoriteWorkoutCards, this::onRemoveFromFavorites);
+            // ✅ PASS USER ID TO ADAPTER
+            adapter = new FavoriteWorkoutCardAdapter(favoriteWorkoutCards, this::onRemoveFromFavorites, currentUserId);
             recyclerViewFavorites.setAdapter(adapter);
 
-            Log.d("FavoriteActivity", "✅ Adapter set with " + favoriteWorkoutCards.size() + " items");
+            Log.d("FavoriteActivity", "✅ Adapter set with " + favoriteWorkoutCards.size() + " items for user: " + currentUserId);
 
         } catch (Exception e) {
             Log.e("FavoriteActivity", "❌ Error updating workout list: " + e.getMessage(), e);
@@ -400,7 +455,7 @@ public class FavoriteActivity extends AppCompatActivity {
 
     private void onRemoveFromFavorites(WorkoutCard workoutCard) {
         try {
-            Log.d("FavoriteActivity", "🗑️ Removing from favorites: " + workoutCard.getTitle());
+            Log.d("FavoriteActivity", "🗑️ Removing from favorites: " + workoutCard.getTitle() + " for user: " + currentUserId);
 
             boolean removed = databaseHelper.removeFromFavorites(workoutCard.getId(), currentUserId);
             if (removed) {
@@ -413,7 +468,7 @@ public class FavoriteActivity extends AppCompatActivity {
                 }
 
                 updateStatsUI();
-                Toast.makeText(this, "💔 Removed from favorites", Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, "💔 Removed " + workoutCard.getTitle() + " from favorites", Toast.LENGTH_SHORT).show();
                 Log.d("FavoriteActivity", "✅ Successfully removed: " + workoutCard.getTitle());
             } else {
                 Toast.makeText(this, "❌ Failed to remove from favorites", Toast.LENGTH_SHORT).show();
@@ -434,9 +489,11 @@ public class FavoriteActivity extends AppCompatActivity {
 
             new AlertDialog.Builder(this)
                     .setTitle("Clear All Favorites")
-                    .setMessage("Are you sure you want to remove all workouts from your favorites?")
+                    .setMessage("Are you sure you want to remove all " + favoriteWorkoutCards.size() + " workouts from your favorites?")
                     .setPositiveButton("Clear All", (dialog, which) -> {
                         try {
+                            Log.d("FavoriteActivity", "🗑️ Clearing all favorites for user: " + currentUserId);
+
                             boolean cleared = databaseHelper.clearAllFavorites(currentUserId);
                             if (cleared) {
                                 if (favoriteWorkoutCards != null) {
@@ -449,7 +506,7 @@ public class FavoriteActivity extends AppCompatActivity {
 
                                 updateStatsUI();
                                 Toast.makeText(this, "🗑️ All favorites cleared", Toast.LENGTH_SHORT).show();
-                                Log.d("FavoriteActivity", "✅ All favorites cleared");
+                                Log.d("FavoriteActivity", "✅ All favorites cleared successfully");
                             } else {
                                 Toast.makeText(this, "❌ Failed to clear favorites", Toast.LENGTH_SHORT).show();
                                 Log.e("FavoriteActivity", "❌ Failed to clear all favorites");
@@ -503,10 +560,39 @@ public class FavoriteActivity extends AppCompatActivity {
     protected void onResume() {
         super.onResume();
         try {
+            Log.d("FavoriteActivity", "🔄 Activity resumed, refreshing favorites");
             loadFavoriteWorkouts(); // Refresh when returning to this activity
-            Log.d("FavoriteActivity", "✅ Activity resumed, favorites refreshed");
         } catch (Exception e) {
             Log.e("FavoriteActivity", "❌ Error in onResume: " + e.getMessage(), e);
         }
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        try {
+            // ✅ Unregister broadcast receiver
+            if (favoritesReceiver != null) {
+                unregisterReceiver(favoritesReceiver);
+                Log.d("FavoriteActivity", "✅ Favorites receiver unregistered");
+            }
+        } catch (Exception e) {
+            Log.e("FavoriteActivity", "Error in onDestroy: " + e.getMessage(), e);
+        }
+    }
+
+    // ✅ NEW: Public method để refresh từ bên ngoài
+    public void refreshFavorites() {
+        Log.d("FavoriteActivity", "🔄 Manual refresh triggered");
+        loadFavoriteWorkouts();
+    }
+
+    // ✅ NEW: Getter methods for debugging
+    public String getCurrentUserId() {
+        return currentUserId;
+    }
+
+    public String getCurrentUsername() {
+        return currentUsername;
     }
 }
