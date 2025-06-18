@@ -30,16 +30,14 @@
                 android:layout_gravity="top"
                 android:background="@android:color/transparent">
 
-                <Button
+                <ImageButton
                     android:id="@+id/btnBack"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="❮"
-                    android:textSize="32sp"
+                    android:layout_width="48dp"
+                    android:layout_height="48dp"
+                    android:src="@drawable/back"
                     android:background="@android:color/transparent"
-                    android:textColor="#FFFFFF"
+                    android:scaleType="centerInside"
                     android:contentDescription="@string/back_button" />
-
                 <View
                     android:layout_width="0dp"
                     android:layout_height="0dp"
